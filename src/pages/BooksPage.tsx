@@ -53,8 +53,8 @@ const BooksPage: React.FC = () => {
                 <title>{activeCat ? `${activeCat.name} — ` : ''}বইসমূহ — Salafiyyah Library BD</title>
                 <meta name="description" content="সালাফিয়্যাহ লাইব্রেরি বিডির সকল বইয়ের তালিকা।" />
             </Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold text-white mb-6">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <h1 className="text-2xl font-bold text-white mb-6 section-title">
                     📚 {activeCat ? activeCat.name : 'সকল বই'}
                 </h1>
 
@@ -80,7 +80,7 @@ const BooksPage: React.FC = () => {
                 </div>
 
                 {/* Book grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 books-grid">
                     {isLoading
                         ? Array.from({ length: 15 }).map((_, i) => <BookCardSkeleton key={i} />)
                         : bookData?.books.map((book: any) => (

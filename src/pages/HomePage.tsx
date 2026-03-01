@@ -126,9 +126,9 @@ const HeroSection: React.FC = () => {
                 .animate-float { animation: float infinite ease-in-out; }
             `}</style>
 
-            <div className="relative max-w-5xl mx-auto px-4 text-center">
+            <div className="relative max-w-5xl mx-auto px-4 text-center hero-section" style={{ overflowX: 'hidden' }}>
                 {/* Arabic Basmala */}
-                <div className="hero-animate-1 mb-6 font-arabic text-2xl text-[#c9a84c] opacity-80" style={{ fontFamily: "'Amiri', serif" }}>
+                <div className="hero-animate-1 mb-6 font-arabic text-2xl text-[#c9a84c] opacity-80" style={{ fontFamily: "'Amiri', serif", maxWidth: '100%' }}>
                     بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
                 </div>
 
@@ -205,7 +205,7 @@ const HeroSection: React.FC = () => {
                 </div>
 
                 {/* Stat Badges */}
-                <div className="hero-animate-4 flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
+                <div className="hero-animate-4 flex flex-wrap items-center justify-center gap-4 text-sm font-medium hero-stats">
                     <div className="px-5 py-2 rounded-full border border-[#c9a84c]/20 bg-[#0d1428]/50 backdrop-blur-sm text-[#c9a84c] flex items-center gap-2">
                         <span className="text-lg">📚</span> ৫০০+ বই
                     </div>
@@ -275,9 +275,9 @@ const SalahTimesWidget: React.FC = () => {
     )
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-10">
-            <h2 className="text-xl font-bold text-white mb-4">🕌 সালাতের সময়</h2>
-            <div className="grid grid-cols-5 gap-3">
+        <section className="max-w-7xl mx-auto px-4 my-10" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">🕌 সালাতের সময়</h2>
+            <div className="grid grid-cols-5 gap-3 salah-grid">
                 {Object.entries(salahNames).map(([key, name]) => (
                     <div
                         key={key}
@@ -317,9 +317,9 @@ const NewArrivals: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds }
     })
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">🆕 নতুন আসা বই</h2>
-            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">🆕 নতুন আসা বই</h2>
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 books-grid-scroll">
                 {isLoading
                     ? Array.from({ length: 5 }).map((_, i) => (
                         <div key={i} className="min-w-[200px] max-w-[200px]"><BookCardSkeleton /></div>
@@ -359,9 +359,9 @@ const FeaturedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds
     })
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">⭐ ফিচার্ড বই</h2>
-            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">⭐ ফিচার্ড বই</h2>
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 books-grid-scroll">
                 {isLoading
                     ? Array.from({ length: 5 }).map((_, i) => (
                         <div key={i} className="min-w-[200px] max-w-[200px]"><BookCardSkeleton /></div>
@@ -414,9 +414,9 @@ const HadithOfTheDay: React.FC = () => {
     })
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">📜 হাদীস অফ দ্য ডে</h2>
-            <div className="bg-gradient-to-br from-[#1a1500] to-[#0d1428] rounded-xl border border-[#c9a84c]/30 p-6 gold-glow">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">📜 হাদীস অফ দ্য ডে</h2>
+            <div className="bg-gradient-to-br from-[#1a1500] to-[#0d1428] rounded-xl border border-[#c9a84c]/30 p-6 gold-glow card">
                 {hadith?.arabic && (
                     <p className="font-arabic text-xl text-[#f0c040] text-right mb-4 leading-relaxed" dir="rtl">
                         {hadith.arabic}
@@ -468,9 +468,9 @@ const AyahOfTheDay: React.FC = () => {
     })
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">📖 আজকের আয়াত</h2>
-            <div className="bg-gradient-to-br from-[#0d1a3a] to-[#0d1428] rounded-xl border border-blue-800/40 p-6">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">📖 আজকের আয়াত</h2>
+            <div className="bg-gradient-to-br from-[#0d1a3a] to-[#0d1428] rounded-xl border border-blue-800/40 p-6 card">
                 {ayah && (
                     <>
                         <p className="font-arabic text-2xl text-[#f0c040] text-right mb-4 leading-loose" dir="rtl">
@@ -506,9 +506,9 @@ const CategoriesGrid: React.FC = () => {
     if (!categories?.length) return null
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">📂 ক্যাটাগরি</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">📂 ক্যাটাগরি</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 categories-grid">
                 {categories.map((cat: any) => (
                     <Link
                         key={cat.id}
@@ -537,9 +537,9 @@ const FeaturedWriters: React.FC = () => {
     if (!writers?.length) return null
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">✍️ বিশিষ্ট লেখক</h2>
-            <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">✍️ বিশিষ্ট লেখক</h2>
+            <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 writers-grid-scroll">
                 {writers.map((w: any) => (
                     <Link key={w.id} to={`/writers/${w.id}`} className="flex flex-col items-center min-w-[100px] group">
                         <div className="w-16 h-16 rounded-full bg-[#1a3a8f] flex items-center justify-center text-2xl text-white mb-2 border-2 border-blue-800/40 group-hover:border-[#f0c040] transition-colors overflow-hidden">
@@ -592,9 +592,9 @@ const IslamicEventCountdown: React.FC = () => {
     }, [nextEvent])
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">🌙 আসন্ন ইসলামী ইভেন্ট</h2>
-            <div className="bg-gradient-to-r from-[#1a3a8f]/30 to-[#0d1428] rounded-xl border border-blue-800/40 p-6 text-center">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">🌙 আসন্ন ইসলামী ইভেন্ট</h2>
+            <div className="bg-gradient-to-r from-[#1a3a8f]/30 to-[#0d1428] rounded-xl border border-blue-800/40 p-6 text-center card">
                 <p className="text-[#f0c040] text-2xl font-bold mb-2">{nextEvent.name}</p>
                 <p className="text-white text-lg">{timeLeft}</p>
             </div>
@@ -623,9 +623,9 @@ const DailyDua: React.FC = () => {
     })
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">🤲 আজকের দুআ</h2>
-            <div className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-6">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">🤲 আজকের দুআ</h2>
+            <div className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-6 card">
                 {dua?.arabic && (
                     <p className="font-arabic text-xl text-[#f0c040] text-right mb-4 leading-relaxed" dir="rtl">
                         {dua.arabic}
@@ -657,12 +657,12 @@ const TopWishlistedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compa
     if (!books?.length) return null
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-white">🏆 শীর্ষ ৫ সর্বাধিক উইশলিস্টকৃত বই</h2>
-                <Link to="/top-books" className="text-[#3d6bff] text-sm hover:underline">সব দেখুন →</Link>
+                <h2 className="text-xl font-bold text-white section-title">🏆 শীর্ষ ৫ সর্বাধিক উইশলিস্টকৃত বই</h2>
+                <Link to="/top-books" className="text-[#3d6bff] text-sm hover:underline btn-text-hide">সব দেখুন →</Link>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 books-grid">
                 {books.map((book: any, i: number) => (
                     <div key={book.id} className="relative">
                         <span className="absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full bg-[#f0c040] text-[#0a0f1e] flex items-center justify-center font-bold text-sm">
@@ -710,12 +710,12 @@ const RecentlyViewedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, comp
     if (!books?.length) return null
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
+        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-white">🕐 সম্প্রতি দেখা বই</h2>
-                <button onClick={clearHistory} className="text-red-400 text-sm hover:underline">ইতিহাস মুছুন</button>
+                <h2 className="text-xl font-bold text-white section-title">🕐 সম্প্রতি দেখা বই</h2>
+                <button onClick={clearHistory} className="text-red-400 text-sm hover:underline btn-text-hide">ইতিহাস মুছুন</button>
             </div>
-            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 books-grid-scroll">
                 {books.map((book: any) => (
                     <div key={book.id} className="min-w-[200px] max-w-[200px]">
                         <BookCard
@@ -752,9 +752,9 @@ const AllBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds }) =
 
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12">
-            <h2 className="text-xl font-bold text-white mb-4">📚 সকল বই</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <section className="max-w-7xl mx-auto px-4 my-12 container" style={{ overflowX: 'hidden' }}>
+            <h2 className="text-xl font-bold text-white mb-4 section-title">📚 সকল বই</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 books-grid">
                 {isLoading
                     ? Array.from({ length: 8 }).map((_, i) => <BookCardSkeleton key={i} />)
                     : data?.map((book: any) => (

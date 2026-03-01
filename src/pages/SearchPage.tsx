@@ -63,17 +63,17 @@ const SearchPage: React.FC = () => {
     return (
         <>
             <Helmet><title>খুঁজুন — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold text-white mb-6">🔍 অনুসন্ধান</h1>
-                <div className="flex flex-col md:flex-row gap-4 mb-8">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <h1 className="text-2xl font-bold text-white mb-6 section-title">🔍 অনুসন্ধান</h1>
+                <div className="flex flex-col md:flex-row gap-4 mb-8 search-controls">
                     <input
                         type="text" value={query} onChange={(e) => handleQueryChange(e.target.value)}
                         placeholder="বই, লেখক বা প্রকাশনী খুঁজুন..."
-                        className="flex-1 px-4 py-3 rounded-lg bg-[#0d1428] border border-[#c9a84c]/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none"
+                        className="flex-1 px-4 py-3 rounded-lg bg-[#0d1428] border border-[#c9a84c]/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none search-input"
                     />
                     <select
                         value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="px-4 py-3 rounded-lg bg-[#0d1428] border border-blue-800/40 text-white focus:border-[#f0c040] focus:outline-none"
+                        className="px-4 py-3 rounded-lg bg-[#0d1428] border border-blue-800/40 text-white focus:border-[#f0c040] focus:outline-none category-select"
                     >
                         <option value="">সকল ক্যাটাগরি</option>
                         {categories?.map((cat: any) => (
@@ -84,7 +84,7 @@ const SearchPage: React.FC = () => {
 
                 {q && <p className="text-[#8899bb] mb-4">"{q}" — {results?.length || 0} ফলাফল</p>}
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 books-grid">
                     {isLoading
                         ? Array.from({ length: 10 }).map((_, i) => <BookCardSkeleton key={i} />)
                         : results?.map((book: any) => (

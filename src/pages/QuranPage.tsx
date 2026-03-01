@@ -31,16 +31,16 @@ const QuranPage: React.FC = () => {
     return (
         <>
             <Helmet><title>কুরআন — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <h1 className="text-2xl font-bold text-white">📖 আল-কুরআন</h1>
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 quran-header">
+                    <h1 className="text-2xl font-bold text-white section-title">📖 আল-কুরআন</h1>
                     <input
                         type="text" value={search} onChange={(e) => setSearch(e.target.value)}
                         placeholder="সূরা খুঁজুন..."
-                        className="px-4 py-2.5 rounded-xl bg-[#0d1428] border border-blue-800/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none w-full md:w-64"
+                        className="px-4 py-2.5 rounded-xl bg-[#0d1428] border border-blue-800/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none w-full md:w-64 search-input"
                     />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 quran-grid">
                     {isLoading
                         ? Array.from({ length: 12 }).map((_, i) => <div key={i} className="skeleton h-20 rounded-xl" />)
                         : filtered.map((s: any) => (

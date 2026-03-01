@@ -58,14 +58,14 @@ const WriterDetailPage: React.FC = () => {
     return (
         <>
             <Helmet><title>{writer.name} — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
-                    <div className="w-32 h-32 rounded-full bg-[#1a3a8f] flex items-center justify-center text-5xl text-white border-4 border-blue-800/40 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <div className="flex flex-col md:flex-row items-center gap-6 mb-8 writer-header">
+                    <div className="w-32 h-32 rounded-full min-w-[128px] min-h-[128px] bg-[#1a3a8f] flex items-center justify-center text-5xl text-white border-4 border-blue-800/40 overflow-hidden writer-avatar">
                         {writer.avatar ? <img src={writer.avatar} alt={writer.name} className="w-full h-full object-cover" /> : writer.name?.charAt(0)}
                     </div>
                     <div className="text-center md:text-left">
-                        <h1 className="text-2xl font-bold text-white mb-2">{writer.name}</h1>
-                        {writer.bio && <p className="text-[#8899bb] max-w-xl">{writer.bio}</p>}
+                        <h1 className="text-2xl font-bold text-white mb-2 section-title">{writer.name}</h1>
+                        {writer.bio && <p className="text-[#8899bb] max-w-xl writer-bio">{writer.bio}</p>}
                         {user && (
                             <button onClick={toggleFav} className={`mt-3 px-4 py-2 rounded-lg text-sm transition-colors ${isFav ? 'bg-[#f0c040] text-[#0a0f1e]' : 'border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040] hover:text-[#0a0f1e]'}`}>
                                 {isFav ? '⭐ প্রিয় লেখক' : '☆ প্রিয় লেখক হিসেবে যোগ করুন'}
@@ -73,8 +73,8 @@ const WriterDetailPage: React.FC = () => {
                         )}
                     </div>
                 </div>
-                <h2 className="text-xl font-bold text-white mb-4">📚 এই লেখকের বই ({books?.length || 0})</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <h2 className="text-xl font-bold text-white mb-4 section-title">📚 এই লেখকের বই ({books?.length || 0})</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 books-grid">
                     {isLoading
                         ? Array.from({ length: 5 }).map((_, i) => <BookCardSkeleton key={i} />)
                         : books?.map((b: any) => (

@@ -117,14 +117,14 @@ const AsmaulHusnaPage: React.FC = () => {
     return (
         <>
             <Helmet><title>আসমাউল হুসনা — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-12">
+            <div className="max-w-7xl mx-auto px-4 py-12 container page-content" style={{ overflowX: 'hidden' }}>
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">🌟 আসমাউল হুসনা</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 section-title">🌟 আসমাউল হুসনা</h1>
                     <p className="text-[#8899bb] text-lg">আল্লাহর ৯৯টি সুন্দর নাম</p>
                 </div>
 
                 {/* Search Bar */}
-                <div className="max-w-md mx-auto mb-12 relative">
+                <div className="max-w-md mx-auto mb-12 relative search-container">
                     <input
                         type="text"
                         placeholder="নাম বা অর্থ লিখে খুঁজুন..."
@@ -135,11 +135,11 @@ const AsmaulHusnaPage: React.FC = () => {
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl opacity-40">🔍</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 asmaul-grid">
                     {filteredNames.map((name) => (
                         <div
                             key={name.number}
-                            className="relative bg-[#0d1428] rounded-[12px] border border-[#c9a84c] p-5 text-center gold-glow transition-all hover:shadow-[0_0_15px_rgba(201,168,76,0.3)]"
+                            className="relative bg-[#0d1428] rounded-[12px] border border-[#c9a84c] p-5 text-center gold-glow transition-all hover:shadow-[0_0_15px_rgba(201,168,76,0.3)] asmaul-card"
                         >
                             {/* Number badge (top right) */}
                             <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-[#c9a84c]/20 border border-[#c9a84c]/40 text-[#c9a84c] text-xs font-bold flex items-center justify-center">

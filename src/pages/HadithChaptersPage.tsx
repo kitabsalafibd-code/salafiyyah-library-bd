@@ -24,10 +24,10 @@ const HadithChaptersPage: React.FC = () => {
     return (
         <>
             <Helmet><title>{book?.name || 'অধ্যায়'} — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <Link to="/hadith" className="text-[#3d6bff] text-sm hover:underline mb-4 block">← সকল হাদীস গ্রন্থ</Link>
-                <h1 className="text-2xl font-bold text-white mb-6">{book?.name || 'অধ্যায়সমূহ'}</h1>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <h1 className="text-2xl font-bold text-white mb-6 section-title">{book?.name || 'অধ্যায়সমূহ'}</h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 hadith-grid">
                     {isLoading
                         ? Array.from({ length: 9 }).map((_, i) => <div key={i} className="skeleton h-20 rounded-xl" />)
                         : chapters?.map((ch: any) => (

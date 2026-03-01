@@ -27,18 +27,18 @@ const DuaPage: React.FC = () => {
     return (
         <>
             <Helmet><title>দৈনিক দুআ — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-white mb-2">🤲 দৈনিক দুআ</h1>
+                    <h1 className="text-2xl font-bold text-white mb-2 section-title">🤲 দৈনিক দুআ</h1>
                     <p className="text-[#8899bb]">কুরআন ও সুন্নাহ থেকে দুআসমূহ</p>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-4 dua-list">
                     {(duas || fallbackDuas).map((dua: any, i: number) => (
-                        <div key={i} className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-6 gold-glow transition-all">
-                            <p className="font-arabic text-xl text-[#f0c040] text-right mb-4 leading-relaxed" dir="rtl">
+                        <div key={i} className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-6 gold-glow transition-all dua-card">
+                            <p className="font-arabic text-xl text-[#f0c040] text-right mb-4 leading-relaxed dua-arabic" dir="rtl">
                                 {dua.arabic}
                             </p>
-                            <p className="text-white leading-relaxed mb-2">{dua.bangla}</p>
+                            <p className="text-white leading-relaxed mb-2 dua-translation">{dua.bangla}</p>
                             <p className="text-[#8899bb] text-sm">{dua.reference}</p>
                         </div>
                     ))}

@@ -87,16 +87,16 @@ const AdminCSVImportPanel: React.FC = () => {
     }
 
     return (
-        <div>
-            <h2 className="text-lg font-bold text-white mb-4">📥 CSV আমদানি</h2>
+        <div className="admin-csv-panel">
+            <h2 className="text-lg font-bold text-white mb-4 admin-header">📥 CSV আমদানি</h2>
             <div className="space-y-6">
                 {/* Download template */}
-                <div className="bg-[#111a33] rounded-xl border border-blue-800/30 p-4 flex items-center justify-between">
+                <div className="bg-[#111a33] rounded-xl border border-blue-800/30 p-4 flex flex-col sm:flex-row items-center justify-between gap-4 template-card">
                     <div>
                         <p className="text-white text-sm font-semibold">CSV টেমপ্লেট ডাউনলোড</p>
                         <p className="text-[#8899bb] text-xs">সঠিক ফরম্যাটে CSV তৈরি করুন</p>
                     </div>
-                    <button onClick={downloadTemplate} className="px-4 py-2 bg-[#1a3a8f] hover:bg-[#2952cc] text-white rounded-lg text-sm transition-colors">📥 ডাউনলোড</button>
+                    <button onClick={downloadTemplate} className="px-4 py-2 bg-[#1a3a8f] hover:bg-[#2952cc] text-white rounded-lg text-sm transition-colors w-full sm:w-auto">📥 ডাউনলোড</button>
                 </div>
 
                 {/* File upload */}
@@ -112,8 +112,8 @@ const AdminCSVImportPanel: React.FC = () => {
                 {rows.length > 0 && (
                     <div>
                         <p className="text-white text-sm mb-2">📋 প্রিভিউ ({rows.length} টি বই)</p>
-                        <div className="overflow-x-auto rounded-xl border border-blue-800/30 max-h-[300px] overflow-y-auto">
-                            <table className="w-full text-xs">
+                        <div className="overflow-x-auto rounded-xl border border-blue-800/30 max-h-[300px] overflow-y-auto admin-table-container">
+                            <table className="w-full text-xs admin-table">
                                 <thead className="sticky top-0"><tr className="bg-[#111a33] text-[#8899bb]">
                                     <th className="px-2 py-2 text-left">শিরোনাম</th><th className="px-2 py-2 text-left">লেখক</th>
                                     <th className="px-2 py-2 text-left">প্রকাশনী</th><th className="px-2 py-2 text-left">ক্যাটাগরি</th>
@@ -153,7 +153,7 @@ const AdminCSVImportPanel: React.FC = () => {
                         {/* Import button */}
                         <button
                             onClick={handleImport} disabled={importing || rows.length === 0}
-                            className="mt-4 px-6 py-3 bg-gradient-to-r from-[#c9a84c] to-[#f0c040] text-[#0a0f1e] font-bold rounded-xl disabled:opacity-50 transition-all"
+                            className="mt-4 px-6 py-3 bg-gradient-to-r from-[#c9a84c] to-[#f0c040] text-[#0a0f1e] font-bold rounded-xl disabled:opacity-50 transition-all w-full flex items-center justify-center gap-2"
                         >
                             {importing ? `আমদানি হচ্ছে... (${progress}%)` : `📥 ${rows.length} টি বই আমদানি করুন`}
                         </button>

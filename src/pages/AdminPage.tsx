@@ -36,17 +36,17 @@ const AdminPage: React.FC = () => {
     return (
         <>
             <Helmet><title>অ্যাডমিন — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-[1400px] mx-auto px-4 py-6">
-                <h1 className="text-2xl font-bold text-white mb-6">🛠️ অ্যাডমিন প্যানেল</h1>
-                <div className="flex flex-col md:flex-row gap-6">
+            <div className="max-w-[1400px] mx-auto px-4 py-6 container page-content" style={{ overflowX: 'hidden' }}>
+                <h1 className="text-2xl font-bold text-white mb-6 section-title">🛠️ অ্যাডমিন প্যানেল</h1>
+                <div className="flex flex-col md:flex-row gap-6 admin-layout">
                     {/* Sidebar - desktop / Top tabs - mobile */}
-                    <div className="md:w-52 shrink-0">
-                        <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible scrollbar-hide pb-2 md:pb-0">
+                    <div className="md:w-52 shrink-0 admin-sidebar">
+                        <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible scrollbar-hide pb-2 md:pb-0 sidebar-nav">
                             {sidebarItems.map(item => (
                                 <button
                                     key={item.key}
                                     onClick={() => setActivePanel(item.key)}
-                                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap text-left transition-all ${activePanel === item.key
+                                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap text-left transition-all sidebar-btn ${activePanel === item.key
                                         ? 'bg-[#1a3a8f] text-white shadow-lg shadow-blue-900/30'
                                         : 'bg-[#0d1428] text-[#8899bb] hover:text-white border border-blue-800/30 hover:border-blue-700/50'
                                         }`}

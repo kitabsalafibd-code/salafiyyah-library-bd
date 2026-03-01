@@ -68,14 +68,14 @@ const SurahDetailPage: React.FC = () => {
     return (
         <>
             <Helmet><title>{arabic?.englishName || `সূরা ${number}`} — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <Link to="/quran" className="text-[#3d6bff] text-sm hover:underline mb-4 block">← সকল সূরা</Link>
                 {isLoading ? (
                     <div className="space-y-4">{Array.from({ length: 5 }).map((_, i) => <div key={i} className="skeleton h-24 rounded-xl" />)}</div>
                 ) : arabic && (
                     <>
-                        <div className="text-center mb-8 bg-gradient-to-br from-[#0d1a3a] to-[#0d1428] rounded-2xl border border-blue-800/40 p-8">
-                            <h1 className="font-arabic text-4xl text-[#f0c040] mb-2" dir="rtl">{arabic.name}</h1>
+                        <div className="text-center mb-8 bg-gradient-to-br from-[#0d1a3a] to-[#0d1428] rounded-2xl border border-blue-800/40 p-8 surah-header">
+                            <h1 className="font-arabic text-4xl text-[#f0c040] mb-2 surah-name" dir="rtl">{arabic.name}</h1>
                             <p className="text-white text-xl font-semibold">{arabic.englishName}</p>
                             <p className="text-[#8899bb] text-sm">{arabic.englishNameTranslation} • {arabic.numberOfAyahs} আয়াত • {arabic.revelationType === 'Meccan' ? 'মাক্কী' : 'মাদানী'}</p>
                         </div>
@@ -89,7 +89,7 @@ const SurahDetailPage: React.FC = () => {
 
                         <div className="space-y-4">
                             {arabic.ayahs?.map((ayah: any, i: number) => (
-                                <div key={ayah.number} className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-5 hover:border-[#c9a84c]/30 transition-colors">
+                                <div key={ayah.number} className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-5 hover:border-[#c9a84c]/30 transition-colors ayah-card">
                                     <div className="flex items-start justify-between mb-3">
                                         <span className="w-9 h-9 rounded-full bg-[#1a3a8f] flex items-center justify-center text-[#f0c040] text-xs font-bold shrink-0">
                                             {ayah.numberInSurah}
@@ -104,10 +104,10 @@ const SurahDetailPage: React.FC = () => {
                                             </button>
                                         )}
                                     </div>
-                                    <p className="font-arabic text-xl text-white text-right leading-loose mb-4" dir="rtl">
+                                    <p className="font-arabic text-xl text-white text-right leading-loose mb-4 ayah-arabic" dir="rtl">
                                         {ayah.text}
                                     </p>
-                                    <p className="text-[#8899bb] leading-relaxed">
+                                    <p className="text-[#8899bb] leading-relaxed ayah-translation">
                                         {bangla?.ayahs?.[i]?.text || ''}
                                     </p>
                                 </div>

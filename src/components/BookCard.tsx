@@ -55,7 +55,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
     return (
         <Link
             to={`/books/${book.id}`}
-            className="group block bg-[#0d1428] rounded-xl border border-blue-800/40 overflow-hidden transition-all duration-300 hover:-translate-y-1 gold-glow"
+            className="group block bg-[#0d1428] rounded-xl border border-blue-800/40 overflow-hidden transition-all duration-300 hover:-translate-y-1 gold-glow card"
         >
             {/* Cover Image */}
             <div className="relative aspect-[3/4] bg-[#111a33] overflow-hidden">
@@ -117,12 +117,12 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
             </div>
 
             {/* Info */}
-            <div className="p-4 space-y-1.5 flex-1 flex flex-col">
-                <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 group-hover:text-[#f0c040] transition-colors">
+            <div className="p-4 space-y-1.5 flex-1 flex flex-col card-content">
+                <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 group-hover:text-[#f0c040] transition-colors card-title">
                     {book.title}
                 </h3>
-                <p className="text-[#c9a84c] text-xs">{authorName}</p>
-                {publisherName && <p className="text-[#8899bb] text-xs pb-1">{publisherName}</p>}
+                <p className="text-[#c9a84c] text-xs author-name">{authorName}</p>
+                {publisherName && <p className="text-[#8899bb] text-xs pb-1 publisher-name">{publisherName}</p>}
 
                 <div className="mt-auto pt-2">
                     <ReadingProgressButton bookId={book.id} />
@@ -130,11 +130,11 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
 
                 <div className="flex items-center justify-between pt-2">
                     {book.price ? (
-                        <span className="text-[#f0c040] font-bold text-sm">৳ {book.price}</span>
+                        <span className="text-[#f0c040] font-bold text-sm price-tag">৳ {book.price}</span>
                     ) : (
                         <span className="text-[#8899bb] text-xs">মূল্য নেই</span>
                     )}
-                    <span className="text-xs px-3 py-1 rounded-lg border border-[#2952cc] text-[#3d6bff] group-hover:bg-[#2952cc] group-hover:text-white transition-all">
+                    <span className="text-xs px-3 py-1 rounded-lg border border-[#2952cc] text-[#3d6bff] group-hover:bg-[#2952cc] group-hover:text-white transition-all details-button">
                         বিস্তারিত দেখুন
                     </span>
                 </div>

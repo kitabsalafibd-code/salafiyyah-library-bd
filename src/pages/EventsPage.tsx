@@ -38,19 +38,19 @@ const EventsPage: React.FC = () => {
     return (
         <>
             <Helmet><title>ইসলামী ইভেন্ট — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-white mb-2">🌙 ইসলামী ইভেন্ট</h1>
+                    <h1 className="text-2xl font-bold text-white mb-2 section-title">🌙 ইসলামী ইভেন্ট</h1>
                     <p className="text-[#8899bb]">আসন্ন ইসলামী দিবস ও কাউন্টডাউন</p>
                 </div>
                 <div className="space-y-4">
                     {upcomingEvents.map((event, i) => (
                         <div
                             key={event.name}
-                            className={`bg-[#0d1428] rounded-xl border p-6 transition-all ${i === 0 ? 'border-[#f0c040] shadow-[0_0_20px_rgba(240,192,64,0.15)]' : 'border-blue-800/40'
+                            className={`bg-[#0d1428] rounded-xl border p-6 transition-all event-card ${i === 0 ? 'border-[#f0c040] shadow-[0_0_20px_rgba(240,192,64,0.15)]' : 'border-blue-800/40'
                                 }`}
                         >
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 event-info">
                                 <div>
                                     <div className="flex items-center gap-3 mb-2">
                                         <span className="text-2xl">{i === 0 ? '🌟' : '🌙'}</span>
@@ -61,7 +61,7 @@ const EventsPage: React.FC = () => {
                                     <p className="text-[#8899bb] text-xs mt-1">{event.date.toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className={`font-bold ${i === 0 ? 'text-[#f0c040] text-lg' : 'text-white'}`}>
+                                    <p className={`font-bold countdown-timer ${i === 0 ? 'text-[#f0c040] text-lg' : 'text-white'}`}>
                                         {getCountdown(event.date)}
                                     </p>
                                 </div>

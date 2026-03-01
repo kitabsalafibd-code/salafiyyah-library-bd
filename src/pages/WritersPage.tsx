@@ -19,9 +19,9 @@ const WritersPage: React.FC = () => {
                 <title>লেখকগণ — Salafiyyah Library BD</title>
                 <meta name="description" content="সালাফিয়্যাহ লাইব্রেরি বিডির সম্মানিত লেখকগণ ও তাদের জীবনী।" />
             </Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold text-white mb-6">✍️ লেখকগণ</h1>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <h1 className="text-2xl font-bold text-white mb-6 section-title">✍️ লেখকগণ</h1>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 writers-grid">
                     {isLoading
                         ? Array.from({ length: 10 }).map((_, i) => (
                             <div key={i} className="flex flex-col items-center gap-3 animate-pulse">

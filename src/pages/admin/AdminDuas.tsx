@@ -35,13 +35,13 @@ const AdminDuasPanel: React.FC = () => {
     const inputCls = "w-full px-3 py-2.5 rounded-lg bg-[#111a33] border border-blue-800/40 text-white text-sm focus:border-[#f0c040] focus:outline-none"
 
     return (
-        <div>
-            <div className="flex items-center justify-between mb-4">
+        <div className="admin-duas-panel">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4 admin-header">
                 <h2 className="text-lg font-bold text-white">🤲 দুআ পরিচালনা</h2>
-                <button onClick={openAdd} className="px-4 py-2 bg-[#1a3a8f] hover:bg-[#2952cc] text-white rounded-lg text-sm transition-colors">+ নতুন দুআ</button>
+                <button onClick={openAdd} className="px-4 py-2 bg-[#1a3a8f] hover:bg-[#2952cc] text-white rounded-lg text-sm transition-colors w-full sm:w-auto">+ নতুন দুআ</button>
             </div>
-            <div className="overflow-x-auto rounded-xl border border-blue-800/30">
-                <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-xl border border-blue-800/30 admin-table-container">
+                <table className="w-full text-sm admin-table">
                     <thead><tr className="bg-[#111a33] text-[#8899bb]"><th className="px-3 py-3 text-left">শিরোনাম</th><th className="px-3 py-3 text-left">ক্যাটাগরি</th><th className="px-3 py-3 text-center">অ্যাকশন</th></tr></thead>
                     <tbody>
                         {isLoading ? <tr><td colSpan={3} className="text-center py-8"><div className="skeleton h-8 w-48 mx-auto rounded" /></td></tr> :
@@ -60,7 +60,7 @@ const AdminDuasPanel: React.FC = () => {
             </div>
             {showModal && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
-                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto admin-modal" onClick={e => e.stopPropagation()}>
                         <h3 className="text-lg font-bold text-white mb-6">{editingId ? '📝 দুআ সম্পাদনা' : '➕ নতুন দুআ'}</h3>
                         <div className="space-y-4">
                             <div><label className="text-[#8899bb] text-xs block mb-1">শিরোনাম</label><input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className={inputCls} /></div>

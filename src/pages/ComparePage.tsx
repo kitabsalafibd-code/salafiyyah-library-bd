@@ -33,9 +33,9 @@ const ComparePage: React.FC = () => {
     return (
         <>
             <Helmet><title>তুলনা করুন — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-2xl font-bold text-white">⚖️ বই তুলনা</h1>
+                    <h1 className="text-2xl font-bold text-white section-title">⚖️ বই তুলনা</h1>
                     <button onClick={resetSelection} className="px-4 py-2 border border-[#c9a84c] text-[#c9a84c] rounded-lg text-sm hover:bg-[#c9a84c] hover:text-[#0a0f1e] transition-colors">
                         আরেকটি বই বাছুন
                     </button>
@@ -49,8 +49,8 @@ const ComparePage: React.FC = () => {
                         </Link>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
+                    <div className="overflow-x-auto compare-table-container">
+                        <table className="w-full compare-table">
                             <thead>
                                 <tr className="border-b border-blue-800/40">
                                     <th className="py-3 px-4 text-left text-[#8899bb] text-sm w-40">বৈশিষ্ট্য</th>

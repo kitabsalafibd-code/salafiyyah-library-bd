@@ -48,7 +48,7 @@ const WishlistTab: React.FC<{ userId: string }> = ({ userId }) => {
     if (!books?.length) return <p className="text-[#8899bb] text-center py-12">আপনার উইশলিস্ট খালি</p>
 
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 books-grid">
             {books.map((item: any) => (
                 <div key={item.id} className="relative group">
                     <BookCard book={item.books} />
@@ -114,7 +114,7 @@ const ReadingListTab: React.FC<{ userId: string }> = ({ userId }) => {
             ) : !items?.length ? (
                 <p className="text-[#8899bb] text-center py-12">এই তালিকায় কোনো বই নেই</p>
             ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 books-grid">
                     {items.map((item: any) => (
                         <div key={item.id} className="relative group">
                             <BookCard book={item.books} />
@@ -357,7 +357,7 @@ const FavWritersTab: React.FC<{ userId: string }> = ({ userId }) => {
     if (!writers?.length) return <p className="text-[#8899bb] text-center py-12">আপনার পছন্দের লেখক তালিকা খালি</p>
 
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 writers-grid">
             {writers.map((item: any) => (
                 <div key={item.id} className="bg-[#111a33] rounded-xl border border-blue-800/40 p-5 text-center relative group">
                     <Link to={`/writers/${item.writer_id}`}>
@@ -445,7 +445,7 @@ const ProfileTab: React.FC<{ userId: string; userEmail: string }> = ({ userId, u
 
     return (
         <div className="max-w-3xl mx-auto space-y-8">
-            <div className="bg-[#0d1428] rounded-2xl border border-[#c9a84c] p-8 text-center sm:text-left flex flex-col sm:flex-row items-center gap-8 relative overflow-hidden gold-glow">
+            <div className="bg-[#0d1428] rounded-2xl border border-[#c9a84c] p-8 text-center sm:text-left flex flex-col sm:flex-row items-center gap-8 relative overflow-hidden gold-glow profile-card">
 
                 {/* Avatar */}
                 <div className="w-32 h-32 shrink-0 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#f0c040] flex items-center justify-center text-6xl text-[#0a0f1e] font-bold shadow-lg shadow-yellow-900/30">
@@ -496,18 +496,18 @@ const ProfileTab: React.FC<{ userId: string; userEmail: string }> = ({ userId, u
 
             <div className="bg-[#111a33] rounded-2xl border border-blue-800/30 p-8">
                 <h3 className="text-xl font-bold text-white mb-6">📊 আপনার পরিসংখ্যান</h3>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stats-grid">
+                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors stat-card">
                         <div className="text-3xl mb-2">📚</div>
                         <div className="text-2xl font-bold text-white">{stats?.wishlist || 0}</div>
                         <div className="text-[#8899bb] text-sm mt-1">উইশলিস্টে বই</div>
                     </div>
-                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors">
+                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors stat-card">
                         <div className="text-3xl mb-2">✍️</div>
                         <div className="text-2xl font-bold text-white">{stats?.writers || 0}</div>
                         <div className="text-[#8899bb] text-sm mt-1">পছন্দের লেখক</div>
                     </div>
-                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors">
+                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors stat-card">
                         <div className="text-3xl mb-2">⭐</div>
                         <div className="text-2xl font-bold text-white">{stats?.reviews || 0}</div>
                         <div className="text-[#8899bb] text-sm mt-1">রিভিউ দিয়েছেন</div>
@@ -607,14 +607,14 @@ const DashboardPage: React.FC = () => {
     return (
         <>
             <Helmet><title>ড্যাশবোর্ড — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 {/* Tabs */}
-                <div className="flex gap-2 mb-8 overflow-x-auto scrollbar-hide pb-2">
+                <div className="flex gap-2 mb-8 overflow-x-auto scrollbar-hide pb-2 dashboard-tabs">
                     {tabs.map(tab => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${activeTab === tab.key
+                            className={`px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all tab-btn ${activeTab === tab.key
                                 ? 'bg-[#1a3a8f] text-white shadow-lg shadow-blue-900/30'
                                 : 'bg-[#111a33] text-[#8899bb] hover:text-white border border-blue-800/30'
                                 }`}

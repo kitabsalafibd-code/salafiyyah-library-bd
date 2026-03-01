@@ -37,15 +37,15 @@ const HadithDetailPage: React.FC = () => {
     return (
         <>
             <Helmet><title>{book?.name} — অধ্যায় {chapterNumber} — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <Link to={`/hadith/${bookSlug}`} className="text-[#3d6bff] text-sm hover:underline mb-4 block">← অধ্যায়সমূহ</Link>
-                <h1 className="text-2xl font-bold text-white mb-6">{book?.name} — অধ্যায় {chapterNumber}</h1>
+                <h1 className="text-2xl font-bold text-white mb-6 section-title">{book?.name} — অধ্যায় {chapterNumber}</h1>
 
                 <div className="space-y-4">
                     {isLoading
                         ? Array.from({ length: 5 }).map((_, i) => <div key={i} className="skeleton h-40 rounded-xl" />)
                         : hadiths.map((h: any, i: number) => (
-                            <div key={i} className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-5 hover:border-[#c9a84c]/20 transition-colors">
+                            <div key={i} className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-5 hover:border-[#c9a84c]/20 transition-colors hadith-card">
                                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                                     <span className="text-xs bg-[#1a3a8f]/30 text-[#f0c040] px-3 py-1 rounded-full font-bold">
                                         হাদীস #{h.hadithNumber || i + 1}
@@ -57,11 +57,11 @@ const HadithDetailPage: React.FC = () => {
                                     )}
                                 </div>
                                 {h.hadithArabic && (
-                                    <p className="font-arabic text-lg text-white text-right mb-4 leading-loose" dir="rtl">
+                                    <p className="font-arabic text-lg text-white text-right mb-4 leading-loose hadith-arabic" dir="rtl">
                                         {h.hadithArabic}
                                     </p>
                                 )}
-                                <p className="text-[#8899bb] leading-relaxed mb-3">
+                                <p className="text-[#8899bb] leading-relaxed mb-3 hadith-translation">
                                     {h.hadithBengali || 'বাংলা অনুবাদ উপলব্ধ নেই'}
                                 </p>
                                 {h.englishNarrator && (

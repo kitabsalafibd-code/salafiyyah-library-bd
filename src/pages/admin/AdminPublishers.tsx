@@ -81,16 +81,16 @@ const AdminPublishersPanel: React.FC = () => {
     const inputCls = "w-full px-3 py-2.5 rounded-lg bg-[#111a33] border border-blue-800/40 text-white text-sm focus:border-[#f0c040] focus:outline-none"
 
     return (
-        <div>
-            <div className="flex items-center justify-between mb-4">
+        <div className="admin-publishers-panel">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4 admin-header">
                 <h2 className="text-lg font-bold text-white">🏢 প্রকাশনী পরিচালনা</h2>
-                <div className="flex gap-2">
-                    <button onClick={() => setShowImportModal(true)} className="px-4 py-2 bg-[#0d1428] border border-blue-800/40 hover:bg-[#111a33] text-white rounded-lg text-sm transition-colors">📥 CSV আমদানি</button>
-                    <button onClick={openAdd} className="px-4 py-2 bg-[#1a3a8f] hover:bg-[#2952cc] text-white rounded-lg text-sm transition-colors">+ নতুন প্রকাশনী</button>
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <button onClick={() => setShowImportModal(true)} className="px-4 py-2 bg-[#0d1428] border border-blue-800/40 hover:bg-[#111a33] text-white rounded-lg text-sm transition-colors w-full sm:w-auto">📥 CSV আমদানি</button>
+                    <button onClick={openAdd} className="px-4 py-2 bg-[#1a3a8f] hover:bg-[#2952cc] text-white rounded-lg text-sm transition-colors w-full sm:w-auto">+ নতুন প্রকাশনী</button>
                 </div>
             </div>
-            <div className="overflow-x-auto rounded-xl border border-blue-800/30">
-                <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-xl border border-blue-800/30 admin-table-container">
+                <table className="w-full text-sm admin-table">
                     <thead><tr className="bg-[#111a33] text-[#8899bb]"><th className="px-3 py-3 text-left">লোগো</th><th className="px-3 py-3 text-left">নাম</th><th className="px-3 py-3 text-center">অ্যাকশন</th></tr></thead>
                     <tbody>
                         {isLoading ? <tr><td colSpan={3} className="text-center py-8"><div className="skeleton h-8 w-48 mx-auto rounded" /></td></tr> :
@@ -111,7 +111,7 @@ const AdminPublishersPanel: React.FC = () => {
             {/* Import Modal */}
             {showImportModal && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowImportModal(false)}>
-                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 w-full max-w-2xl p-6 relative" onClick={e => e.stopPropagation()}>
+                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 w-full max-w-2xl p-6 relative admin-modal" onClick={e => e.stopPropagation()}>
                         <h3 className="text-xl font-bold text-white mb-4">📥 প্রকাশনী CSV আমদানি</h3>
                         <button onClick={() => setShowImportModal(false)} className="absolute top-4 right-4 text-[#8899bb] hover:text-white">✕</button>
 
@@ -163,7 +163,7 @@ const AdminPublishersPanel: React.FC = () => {
             {/* Edit/Add Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
-                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
+                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 w-full max-w-md p-6 admin-modal" onClick={e => e.stopPropagation()}>
                         <h3 className="text-lg font-bold text-white mb-6">{editingId ? '📝 সম্পাদনা' : '➕ নতুন প্রকাশনী'}</h3>
                         <div className="space-y-4">
                             <div><label className="text-[#8899bb] text-xs block mb-1">নাম *</label><input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className={inputCls} /></div>

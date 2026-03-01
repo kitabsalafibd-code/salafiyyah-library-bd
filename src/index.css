@@ -18,22 +18,10 @@
 
 /* Base styles */
 * {
+  box-sizing: border-box;
+  max-width: 100%;
   scrollbar-width: thin;
   scrollbar-color: #1a3a8f #0a0f1e;
-}
-
-*::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-*::-webkit-scrollbar-track {
-  background: #0a0f1e;
-}
-
-*::-webkit-scrollbar-thumb {
-  background: #1a3a8f;
-  border-radius: 3px;
 }
 
 body {
@@ -42,6 +30,12 @@ body {
   color: #ffffff;
   min-height: 100vh;
   overflow-x: hidden;
+  width: 100%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Arabic text */
@@ -127,4 +121,142 @@ body {
 .category-pill:hover {
   background-color: var(--color-primary);
   color: white;
+}
+
+/* Navbar overrides */
+.hamburger {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block !important;
+  }
+
+  .desktop-nav {
+    display: none !important;
+  }
+}
+
+/* GLOBAL GRID FIXES */
+@media (max-width: 640px) {
+
+  .books-grid,
+  .writers-grid,
+  .publishers-grid,
+  .asmaul-grid,
+  .quran-grid,
+  .hadith-grid,
+  .compare-grid,
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .books-grid {
+    padding: 0 12px !important;
+  }
+
+  .hero-section {
+    min-height: 60vh !important;
+    padding: 20px 16px !important;
+  }
+
+  .hero-section h1 {
+    font-size: 24px !important;
+  }
+
+  .hero-section p {
+    font-size: 14px !important;
+  }
+
+  .hero-stats {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .featured-book-card {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+
+  .featured-book-card img {
+    width: 140px !important;
+    margin: 0 auto !important;
+  }
+
+  .salah-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .book-detail {
+    flex-direction: column !important;
+    padding: 16px !important;
+  }
+
+  .book-detail img {
+    width: 160px !important;
+    margin: 0 auto !important;
+  }
+
+  .admin-sidebar {
+    display: none !important;
+  }
+
+  table {
+    font-size: 12px !important;
+  }
+
+  td,
+  th {
+    padding: 6px 4px !important;
+  }
+
+  button {
+    min-height: 44px !important;
+  }
+
+  .card {
+    padding: 12px !important;
+  }
+
+  .section-title {
+    font-size: 18px !important;
+  }
+
+  .dashboard-tabs {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+
+  .dashboard-tab {
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+
+  .search-bar {
+    width: 100% !important;
+  }
+
+  .container {
+    padding: 0 12px !important;
+    max-width: 100% !important;
+  }
+
+  .btn-text-hide {
+    display: none !important;
+  }
+
+  .page-content {
+    padding-top: 16px !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+
+  .books-grid,
+  .writers-grid,
+  .asmaul-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }

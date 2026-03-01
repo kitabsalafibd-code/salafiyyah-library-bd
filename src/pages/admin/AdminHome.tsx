@@ -51,7 +51,7 @@ const AdminHome: React.FC = () => {
     */
 
     const StatCard = ({ label, value, icon, color }: any) => (
-        <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-6 flex items-center gap-4 hover:border-blue-700 transition-all">
+        <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-6 flex items-center gap-4 hover:border-blue-700 transition-all stat-card">
             <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center text-2xl`}>{icon}</div>
             <div>
                 <p className="text-[#8899bb] text-xs font-semibold uppercase tracking-wider">{label}</p>
@@ -63,18 +63,18 @@ const AdminHome: React.FC = () => {
     if (statsLoading) return <div className="p-10 text-center"><div className="skeleton h-12 w-48 mx-auto rounded-xl" /></div>
 
     return (
-        <div className="space-y-8 animate-fadeIn">
+        <div className="space-y-8 animate-fadeIn admin-home-panel">
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 stats-grid">
                 <StatCard label="মোট বই" value={stats?.books} icon="📚" color="bg-blue-500/10 text-blue-500" />
                 <StatCard label="লেখক" value={stats?.authors} icon="✍️" color="bg-[#f0c040]/10 text-[#f0c040]" />
                 <StatCard label="ইউজার" value={stats?.users} icon="👥" color="bg-green-500/10 text-green-500" />
                 <StatCard label="প্রকাশনী" value={stats?.publishers} icon="🏢" color="bg-purple-500/10 text-purple-500" />
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-6">
+            <div className="grid lg:grid-cols-3 gap-6 admin-main-grid">
                 {/* Chart */}
-                <div className="lg:col-span-2 bg-[#0d1428] rounded-2xl border border-blue-800/40 p-6">
+                <div className="lg:col-span-2 bg-[#0d1428] rounded-2xl border border-blue-800/40 p-6 chart-container">
                     <h3 className="text-white font-bold mb-6 flex items-center gap-2">
                         📈 বই ভিউ (গত ৭ দিন)
                     </h3>
@@ -96,9 +96,9 @@ const AdminHome: React.FC = () => {
 
                 {/* Quick Actions */}
                 <div className="space-y-4">
-                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-6">
+                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-6 actions-container">
                         <h3 className="text-white font-bold mb-4">⚡ দ্রুত কাজ</h3>
-                        <div className="grid grid-cols-1 gap-2">
+                        <div className="grid grid-cols-1 gap-2 action-btns">
                             <button className="w-full py-3 bg-[#1a3a8f] text-white rounded-lg text-sm font-bold hover:bg-[#2952cc] transition-all flex items-center justify-center gap-2">
                                 ➕ নতুন বই যোগ করুন
                             </button>
@@ -112,11 +112,11 @@ const AdminHome: React.FC = () => {
                     </div>
 
                     {/* Recent Activity */}
-                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-4">
+                    <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-4 recent-books-card">
                         <h3 className="text-white font-bold mb-3 px-2">🕒 সাম্প্রতিক বই</h3>
-                        <div className="space-y-2">
+                        <div className="space-y-2 recent-books-list">
                             {recentBooks?.map((b: any) => (
-                                <div key={b.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all group">
+                                <div key={b.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all group book-item">
                                     <div className="w-10 h-12 bg-[#111a33] rounded shrink-0 overflow-hidden border border-blue-800/20">
                                         <img src={b.cover_image} className="w-full h-full object-cover" />
                                     </div>

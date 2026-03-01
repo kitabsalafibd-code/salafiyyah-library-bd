@@ -37,18 +37,18 @@ const PublisherDetailPage: React.FC = () => {
     return (
         <>
             <Helmet><title>{publisher.name} — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
-                    <div className="w-24 h-24 rounded-xl bg-[#1a3a8f]/30 flex items-center justify-center text-4xl overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <div className="flex flex-col md:flex-row items-center gap-6 mb-8 publisher-header">
+                    <div className="w-24 h-24 rounded-xl min-w-[96px] min-h-[96px] bg-[#1a3a8f]/30 flex items-center justify-center text-4xl overflow-hidden publisher-logo">
                         {publisher.logo ? <img src={publisher.logo} alt={publisher.name} className="w-full h-full object-contain" /> : '🏢'}
                     </div>
                     <div className="text-center md:text-left">
-                        <h1 className="text-2xl font-bold text-white mb-2">{publisher.name}</h1>
+                        <h1 className="text-2xl font-bold text-white mb-2 section-title">{publisher.name}</h1>
                         {publisher.description && <p className="text-[#8899bb] max-w-xl">{publisher.description}</p>}
                     </div>
                 </div>
-                <h2 className="text-xl font-bold text-white mb-4">📚 এই প্রকাশনীর বই ({books?.length || 0})</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <h2 className="text-xl font-bold text-white mb-4 section-title">📚 এই প্রকাশনীর বই ({books?.length || 0})</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 books-grid">
                     {isLoading
                         ? Array.from({ length: 5 }).map((_, i) => <BookCardSkeleton key={i} />)
                         : books?.map((b: any) => (

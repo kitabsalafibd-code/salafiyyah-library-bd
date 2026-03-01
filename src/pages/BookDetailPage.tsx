@@ -200,9 +200,9 @@ const BookDetailPage: React.FC = () => {
                 {book.cover_image_url && <meta property="og:image" content={book.cover_image_url} />}
             </Helmet>
 
-            <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 {/* Book detail grid */}
-                <div className="grid md:grid-cols-[350px_1fr] gap-8">
+                <div className="grid md:grid-cols-[350px_1fr] gap-8 book-detail">
                     {/* Cover */}
                     <div className="aspect-[3/4] bg-[#0d1428] rounded-xl border border-blue-800/40 overflow-hidden">
                         {book.cover_image_url ? (
@@ -220,7 +220,7 @@ const BookDetailPage: React.FC = () => {
 
                     {/* Details */}
                     <div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{book.title}</h1>
+                        <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 section-title">{book.title}</h1>
 
                         {/* Rating */}
                         {avgRating && (
@@ -260,7 +260,7 @@ const BookDetailPage: React.FC = () => {
                         )}
 
                         {/* Actions */}
-                        <div className="flex flex-wrap gap-4 mb-8 items-center bg-[#111a33]/50 p-4 rounded-2xl border border-blue-800/20">
+                        <div className="flex flex-wrap gap-4 mb-8 items-center bg-[#111a33]/50 p-4 rounded-2xl border border-blue-800/20 btn-group">
                             <ReadingProgressButton bookId={id!} showLabel />
 
                             {book.pdf_preview_url && (
@@ -402,9 +402,9 @@ const BookDetailPage: React.FC = () => {
                     <div className="mt-16 no-print">
                         <div className="flex items-center gap-3 mb-6">
                             <span className="text-2xl">✍️</span>
-                            <h2 className="text-xl md:text-2xl font-bold text-white">একই লেখকের আরও বই</h2>
+                            <h2 className="text-xl md:text-2xl font-bold text-white section-title">একই লেখকের আরও বই</h2>
                         </div>
-                        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
+                        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 books-grid-scroll">
                             {relatedByAuthor.map((b: any) => (
                                 <div key={b.id} className="min-w-[180px] md:min-w-[220px]">
                                     <BookCard
@@ -423,9 +423,9 @@ const BookDetailPage: React.FC = () => {
                     <div className="mt-16 no-print">
                         <div className="flex items-center gap-3 mb-6">
                             <span className="text-2xl">📚</span>
-                            <h2 className="text-xl md:text-2xl font-bold text-white">একই ক্যাটাগরির বই</h2>
+                            <h2 className="text-xl md:text-2xl font-bold text-white section-title">একই ক্যাটাগরির বই</h2>
                         </div>
-                        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
+                        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 books-grid-scroll">
                             {relatedByCategory.map((b: any) => (
                                 <div key={b.id} className="min-w-[180px] md:min-w-[220px]">
                                     <BookCard

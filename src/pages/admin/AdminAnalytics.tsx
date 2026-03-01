@@ -96,13 +96,13 @@ const AdminAnalyticsPanel: React.FC = () => {
     ]
 
     return (
-        <div>
-            <h2 className="text-lg font-bold text-white mb-4">📊 অ্যানালিটিক্স</h2>
+        <div className="admin-analytics-panel">
+            <h2 className="text-lg font-bold text-white mb-4 admin-header">📊 অ্যানালিটিক্স</h2>
 
             {/* Stat cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-8 stats-grid">
                 {statCards.map(s => (
-                    <div key={s.label} className={`bg-gradient-to-br ${s.color} rounded-xl p-4 text-center`}>
+                    <div key={s.label} className={`bg-gradient-to-br ${s.color} rounded-xl p-4 text-center stat-card`}>
                         <p className="text-2xl mb-1">{s.icon}</p>
                         <p className="text-2xl font-bold text-white">{s.value ?? '-'}</p>
                         <p className="text-white/70 text-xs">{s.label}</p>
@@ -111,19 +111,19 @@ const AdminAnalyticsPanel: React.FC = () => {
             </div>
 
             {/* Charts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 charts-grid">
                 {/* Charts Placeholder */}
-                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4">
+                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4 chart-card">
                     <div style={{ background: '#0d1428', border: '1px solid #1a3a8f', borderRadius: '12px', padding: '20px', color: '#8899bb', textAlign: 'center', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         📊 চার্ট লোড হচ্ছে...
                     </div>
                 </div>
-                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4">
+                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4 chart-card">
                     <div style={{ background: '#0d1428', border: '1px solid #1a3a8f', borderRadius: '12px', padding: '20px', color: '#8899bb', textAlign: 'center', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         📊 চার্ট লোড হচ্ছে...
                     </div>
                 </div>
-                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4 md:col-span-2">
+                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4 md:col-span-2 chart-card">
                     <div style={{ background: '#0d1428', border: '1px solid #1a3a8f', borderRadius: '12px', padding: '20px', color: '#8899bb', textAlign: 'center', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         📊 চার্ট লোড হচ্ছে...
                     </div>
@@ -131,25 +131,29 @@ const AdminAnalyticsPanel: React.FC = () => {
             </div>
 
             {/* Recent activity */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 activity-grid">
+                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4 review-card">
                     <h3 className="text-sm font-semibold text-white mb-3">📝 সাম্প্রতিক রিভিউ</h3>
-                    {recentReviews?.map((r: any) => (
-                        <div key={r.id} className="py-2 border-b border-blue-800/10 last:border-0">
-                            <p className="text-white text-xs">{r.profiles?.full_name || 'অজানা'} — <span className="text-[#c9a84c]">{r.books?.title}</span></p>
-                            <p className="text-[#8899bb] text-[10px] truncate">{r.text}</p>
-                        </div>
-                    ))}
+                    <div className="space-y-2 activity-list">
+                        {recentReviews?.map((r: any) => (
+                            <div key={r.id} className="py-2 border-b border-blue-800/10 last:border-0 activity-item">
+                                <p className="text-white text-xs">{r.profiles?.full_name || 'অজানা'} — <span className="text-[#c9a84c]">{r.books?.title}</span></p>
+                                <p className="text-[#8899bb] text-[10px] truncate">{r.text}</p>
+                            </div>
+                        ))}
+                    </div>
                     {(!recentReviews || recentReviews.length === 0) && <p className="text-[#8899bb] text-xs">কোনো রিভিউ নেই</p>}
                 </div>
-                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4">
+                <div className="bg-[#0d1428] rounded-xl border border-blue-800/30 p-4 user-card">
                     <h3 className="text-sm font-semibold text-white mb-3">🆕 সাম্প্রতিক ব্যবহারকারী</h3>
-                    {recentUsers?.map((u: any) => (
-                        <div key={u.id} className="py-2 border-b border-blue-800/10 last:border-0 flex items-center justify-between">
-                            <p className="text-white text-xs">{u.full_name || u.email || '-'}</p>
-                            <p className="text-[#8899bb] text-[10px]">{u.created_at ? new Date(u.created_at).toLocaleDateString('bn-BD') : ''}</p>
-                        </div>
-                    ))}
+                    <div className="space-y-2 activity-list">
+                        {recentUsers?.map((u: any) => (
+                            <div key={u.id} className="py-2 border-b border-blue-800/10 last:border-0 flex items-center justify-between activity-item">
+                                <p className="text-white text-xs">{u.full_name || u.email || '-'}</p>
+                                <p className="text-[#8899bb] text-[10px]">{u.created_at ? new Date(u.created_at).toLocaleDateString('bn-BD') : ''}</p>
+                            </div>
+                        ))}
+                    </div>
                     {(!recentUsers || recentUsers.length === 0) && <p className="text-[#8899bb] text-xs">কোনো ব্যবহারকারী নেই</p>}
                 </div>
             </div>

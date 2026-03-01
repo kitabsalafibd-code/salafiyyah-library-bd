@@ -16,13 +16,13 @@ const PublishersPage: React.FC = () => {
     return (
         <>
             <Helmet><title>প্রকাশনী — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold text-white mb-6">🏢 প্রকাশনী</h1>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <h1 className="text-2xl font-bold text-white mb-6 section-title">🏢 প্রকাশনী</h1>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 publishers-grid">
                     {isLoading
                         ? Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton h-32 rounded-xl" />)
                         : publishers?.map((p: any) => (
-                            <Link key={p.id} to={`/publishers/${p.id}`} className="group bg-[#0d1428] rounded-xl border border-blue-800/40 p-6 text-center hover:border-[#c9a84c]/50 gold-glow transition-all">
+                            <Link key={p.id} to={`/publishers/${p.id}`} className="group bg-[#0d1428] rounded-xl border border-blue-800/40 p-6 text-center hover:border-[#c9a84c]/50 gold-glow transition-all card">
                                 <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-[#1a3a8f]/30 flex items-center justify-center text-2xl overflow-hidden">
                                     {p.logo ? <img src={p.logo} alt={p.name} className="w-full h-full object-contain" /> : '🏢'}
                                 </div>

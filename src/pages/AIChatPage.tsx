@@ -73,15 +73,15 @@ const AIChatPage: React.FC = () => {
     return (
         <>
             <Helmet><title>কিতাব সহকারী — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col" style={{ height: 'calc(100vh - 180px)' }}>
+            <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col container page-content chat-container" style={{ height: 'calc(100vh - 180px)', overflowX: 'hidden' }}>
                 {/* Header */}
-                <div className="mb-4">
-                    <h1 className="text-2xl font-bold text-white">🤖 কিতাব সহকারী</h1>
+                <div className="mb-4 chat-header">
+                    <h1 className="text-2xl font-bold text-white section-title">🤖 কিতাব সহকারী</h1>
                     <p className="text-[#8899bb] text-sm">ইসলামী জ্ঞান সম্পর্কে প্রশ্ন করুন</p>
                 </div>
 
                 {/* Chat messages */}
-                <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2 scrollbar-hide">
+                <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2 scrollbar-hide message-list">
                     {messages.map((msg, i) => (
                         <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${msg.role === 'user'
@@ -113,7 +113,7 @@ const AIChatPage: React.FC = () => {
                 </div>
 
                 {/* Input */}
-                <div className="flex gap-3 items-end">
+                <div className="flex gap-3 items-end chat-input-area">
                     <textarea
                         ref={textareaRef}
                         value={input}
@@ -121,7 +121,7 @@ const AIChatPage: React.FC = () => {
                         onKeyDown={handleKeyDown}
                         placeholder="আপনার প্রশ্ন লিখুন... (Shift+Enter নতুন লাইন)"
                         rows={1}
-                        className="flex-1 px-4 py-3 rounded-xl bg-[#0d1428] border border-blue-800/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none resize-none max-h-32"
+                        className="flex-1 px-4 py-3 rounded-xl bg-[#0d1428] border border-blue-800/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none resize-none max-h-32 chat-input"
                         style={{ minHeight: '48px' }}
                     />
                     <button

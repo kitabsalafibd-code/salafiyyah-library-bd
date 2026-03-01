@@ -31,13 +31,13 @@ const TopBooksPage: React.FC = () => {
                 <title>শীর্ষ বই — Salafiyyah Library BD</title>
                 <meta name="description" content="সালাফিয়্যাহ লাইব্রেরি বিডির সর্বাধিক জনপ্রিয় এবং পছন্দকৃত বইসমূহ।" />
             </Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <div className="flex items-center gap-3 mb-6">
                     <span className="text-3xl">🏆</span>
-                    <h1 className="text-2xl font-bold text-white">শীর্ষ সর্বাধিক উইশলিস্টকৃত বই</h1>
+                    <h1 className="text-2xl font-bold text-white section-title">শীর্ষ সর্বাধিক উইশলিস্টকৃত বই</h1>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 books-grid">
                     {isLoading
                         ? Array.from({ length: 6 }).map((_, i) => <BookCardSkeleton key={i} />)
                         : books?.map((book: any, i: number) => (

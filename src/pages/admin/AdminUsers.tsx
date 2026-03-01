@@ -19,10 +19,10 @@ const AdminUsersPanel: React.FC = () => {
     })
 
     return (
-        <div>
-            <h2 className="text-lg font-bold text-white mb-4">👥 ব্যবহারকারী পরিচালনা</h2>
-            <div className="overflow-x-auto rounded-xl border border-blue-800/30">
-                <table className="w-full text-sm">
+        <div className="admin-users-panel">
+            <h2 className="text-lg font-bold text-white mb-4 admin-header">👥 ব্যবহারকারী পরিচালনা</h2>
+            <div className="overflow-x-auto rounded-xl border border-blue-800/30 admin-table-container">
+                <table className="w-full text-sm admin-table">
                     <thead><tr className="bg-[#111a33] text-[#8899bb]">
                         <th className="px-3 py-3 text-left">নাম</th><th className="px-3 py-3 text-left">ইমেইল</th>
                         <th className="px-3 py-3 text-left">যোগদান</th><th className="px-3 py-3 text-center">অ্যাডমিন</th>

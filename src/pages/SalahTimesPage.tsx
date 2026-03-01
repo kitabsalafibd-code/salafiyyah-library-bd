@@ -53,8 +53,8 @@ const SalahTimesPage: React.FC = () => {
     return (
         <>
             <Helmet><title>সালাতের সময় — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-4xl mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold text-white mb-2">🕌 সালাতের সময়</h1>
+            <div className="max-w-4xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
+                <h1 className="text-2xl font-bold text-white mb-2 section-title">🕌 সালাতের সময়</h1>
                 <div className="flex flex-wrap gap-3 text-[#8899bb] text-sm mb-8">
                     {dateInfo && <span>{dateInfo.readable}</span>}
                     {dateInfo?.hijri && <span className="text-[#c9a84c]">• {dateInfo.hijri.day} {dateInfo.hijri.month.bn || dateInfo.hijri.month.en} {dateInfo.hijri.year} হিজরী</span>}
@@ -66,24 +66,24 @@ const SalahTimesPage: React.FC = () => {
                 ) : (
                     <>
                         {/* Main 5 salah */}
-                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8 salah-times-grid">
                             {mainSalah.map(key => (
-                                <div key={key} className={`bg-[#0d1428] rounded-xl border p-5 text-center transition-all ${nextSalah === key
-                                        ? 'border-[#f0c040] shadow-[0_0_25px_rgba(240,192,64,0.15)] scale-[1.02]'
-                                        : 'border-blue-800/40'
+                                <div key={key} className={`bg-[#0d1428] rounded-xl border p-5 text-center transition-all salah-card ${nextSalah === key
+                                    ? 'border-[#f0c040] shadow-[0_0_25px_rgba(240,192,64,0.15)] scale-[1.02]'
+                                    : 'border-blue-800/40'
                                     }`}>
                                     <p className={`text-sm font-semibold mb-2 ${nextSalah === key ? 'text-[#f0c040]' : 'text-[#8899bb]'}`}>{salahNames[key]}</p>
                                     <p className={`text-2xl font-bold ${nextSalah === key ? 'text-[#f0c040]' : 'text-white'}`}>{timings?.[key]}</p>
-                                    {nextSalah === key && <span className="text-[10px] text-[#f0c040] mt-2 block">পরবর্তী সালাত ◀</span>}
+                                    {nextSalah === key && <span className="text-[10px] text-[#f0c040] mt-2 block active-label">পরবর্তী সালাত ◀</span>}
                                 </div>
                             ))}
                         </div>
 
                         {/* Additional times */}
-                        <h2 className="text-lg font-bold text-white mb-3">অতিরিক্ত সময়সমূহ</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+                        <h2 className="text-lg font-bold text-white mb-3 section-title">অতিরিক্ত সময়সমূহ</h2>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8 extra-times-grid">
                             {Object.entries(salahNames).filter(([k]) => !mainSalah.includes(k)).map(([key, name]) => (
-                                <div key={key} className="bg-[#0d1428] rounded-lg border border-blue-800/40 p-3 flex items-center justify-between">
+                                <div key={key} className="bg-[#0d1428] rounded-lg border border-blue-800/40 p-3 flex items-center justify-between extra-time-card">
                                     <span className="text-[#8899bb] text-sm">{name}</span>
                                     <span className="text-white font-semibold">{timings?.[key] || '--:--'}</span>
                                 </div>
@@ -92,7 +92,7 @@ const SalahTimesPage: React.FC = () => {
 
                         {/* Qibla direction */}
                         {meta?.latitude && (
-                            <div className="bg-gradient-to-r from-[#1a3a8f]/20 to-[#0d1428] rounded-xl border border-blue-800/40 p-5">
+                            <div className="bg-gradient-to-r from-[#1a3a8f]/20 to-[#0d1428] rounded-xl border border-blue-800/40 p-5 qibla-card">
                                 <h2 className="text-lg font-bold text-white mb-3">🧭 কিবলা দিক</h2>
                                 <div className="flex items-center gap-4">
                                     <div className="w-16 h-16 rounded-full bg-[#1a3a8f] flex items-center justify-center text-3xl">🕋</div>
