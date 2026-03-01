@@ -21,7 +21,7 @@ const AdminWritersPanel: React.FC = () => {
 
     const { data: writers, isLoading } = useQuery({
         queryKey: ['admin-writers'],
-        queryFn: async () => { const { data } = await supabase.from('authors').select('*').order('name'); return data || [] },
+        queryFn: async () => { const { data } = await supabase.from('writers').select('*').order('name'); return data || [] },
     })
 
     const openAdd = () => { setForm({ name: '', bio: '', avatar: '', is_featured: false }); setEditingId(null); setShowModal(true) }
@@ -30,20 +30,20 @@ const AdminWritersPanel: React.FC = () => {
     const saveMutation = useMutation({
         mutationFn: async () => {
             const data = { name: form.name, bio: form.bio, avatar: form.avatar, is_featured: form.is_featured }
-            if (editingId) await supabase.from('authors').update(data).eq('id', editingId)
-            else await supabase.from('authors').insert(data)
+            if (editingId) await supabase.from('writers').update(data).eq('id', editingId)
+            else await supabase.from('writers').insert(data)
         },
         onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-writers'] }); showToast(editingId ? 'লেখক আপডেট হয়েছে!' : 'লেখক যোগ হয়েছে!'); setShowModal(false) },
         onError: () => showToast('ত্রুটি হয়েছে', 'error'),
     })
 
     const deleteMutation = useMutation({
-        mutationFn: async (id: string) => { await supabase.from('authors').delete().eq('id', id) },
+        mutationFn: async (id: string) => { await supabase.from('writers').delete().eq('id', id) },
         onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-writers'] }); showToast('লেখক মুছে ফেলা হয়েছে') },
     })
 
     const toggleFeatured = useMutation({
-        mutationFn: async ({ id, val }: { id: string; val: boolean }) => { await supabase.from('authors').update({ is_featured: val }).eq('id', id) },
+        mutationFn: async ({ id, val }: { id: string; val: boolean }) => { await supabase.from('writers').update({ is_featured: val }).eq('id', id) },
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-writers'] }),
     })
 
@@ -70,7 +70,7 @@ const AdminWritersPanel: React.FC = () => {
             const row = importRows[i]
             if (!row.name?.trim()) { failed++; continue }
             try {
-                await supabase.from('authors').insert({
+                await supabase.from('writers').insert({
                     name: row.name.trim(),
                     bio: row.bio || '',
                     avatar: row.avatar_url || '',

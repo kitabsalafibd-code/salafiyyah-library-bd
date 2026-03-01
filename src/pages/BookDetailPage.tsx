@@ -281,9 +281,9 @@ const BookDetailPage: React.FC = () => {
                                         {wishlisted ? '❤️ উইশলিস্টে আছে' : '🤍 উইশলিস্টে যুক্ত করুন'}
                                     </button>
                                 )}
-                                <ShareButton title={book.title} author={book.authors?.name} variant="large" />
+                                <ShareButton title={book.title} author={book.writers?.name || book.authors?.name} variant="large" />
                                 <button
-                                    onClick={() => toggleCompare(id || '')}
+                                    onClick={() => toggleCompare(id || '', book)}
                                     className={`p-3 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2 border ${isCompareSelected ? 'bg-[#f0c040] text-[#0a0f1e] border-[#f0c040]' : 'bg-[#111a33] text-white border-blue-800/30 hover:border-[#f0c040]/50'}`}
                                     title="তুলনা করুন"
                                 >

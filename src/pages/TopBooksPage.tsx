@@ -16,7 +16,7 @@ const TopBooksPage: React.FC = () => {
             if (error || !data || data.length === 0) {
                 const { data: fallbackData } = await supabase
                     .from('books')
-                    .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                    .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                     .limit(10)
                 return fallbackData || []
             }

@@ -19,7 +19,7 @@ interface Book {
 
 interface BookCardProps {
     book: Book
-    onCompareToggle?: (bookId: string) => void
+    onCompareToggle?: (bookId: string, book: Book) => void
     isCompareSelected?: boolean
 }
 
@@ -46,8 +46,8 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
     const handleCompare = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        onCompareToggle?.(book.id)
-    }, [book.id, onCompareToggle])
+        onCompareToggle?.(book.id, book)
+    }, [book, onCompareToggle])
 
     const authorName = useMemo(() => book.writers?.name || 'অজানা লেখক', [book.writers])
     const publisherName = useMemo(() => book.publishers?.name || '', [book.publishers])

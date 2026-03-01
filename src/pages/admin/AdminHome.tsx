@@ -10,14 +10,14 @@ const AdminHome: React.FC = () => {
         queryFn: async () => {
             const [books, writers, publishers, users, duas] = await Promise.all([
                 supabase.from('books').select('id', { count: 'exact', head: true }),
-                supabase.from('authors').select('id', { count: 'exact', head: true }),
+                supabase.from('writers').select('id', { count: 'exact', head: true }),
                 supabase.from('publishers').select('id', { count: 'exact', head: true }),
                 supabase.from('profiles').select('id', { count: 'exact', head: true }),
                 supabase.from('duas').select('id', { count: 'exact', head: true }),
             ])
             return {
                 books: books.count || 0,
-                authors: writers.count || 0,
+                writers: writers.count || 0,
                 publishers: publishers.count || 0,
                 users: users.count || 0,
                 duas: duas.count || 0,
@@ -67,7 +67,7 @@ const AdminHome: React.FC = () => {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 stats-grid">
                 <StatCard label="মোট বই" value={stats?.books} icon="📚" color="bg-blue-500/10 text-blue-500" />
-                <StatCard label="লেখক" value={stats?.authors} icon="✍️" color="bg-[#f0c040]/10 text-[#f0c040]" />
+                <StatCard label="লেখক" value={stats?.writers} icon="✍️" color="bg-[#f0c040]/10 text-[#f0c040]" />
                 <StatCard label="ইউজার" value={stats?.users} icon="👥" color="bg-green-500/10 text-green-500" />
                 <StatCard label="প্রকাশনী" value={stats?.publishers} icon="🏢" color="bg-purple-500/10 text-purple-500" />
             </div>

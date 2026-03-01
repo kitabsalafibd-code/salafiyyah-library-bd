@@ -309,7 +309,7 @@ const NewArrivals: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds }
         queryFn: async () => {
             const { data } = await supabase
                 .from('books')
-                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                 .order('created_at', { ascending: false })
                 .limit(10)
             return data || []
@@ -351,7 +351,7 @@ const FeaturedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds
         queryFn: async () => {
             const { data } = await supabase
                 .from('books')
-                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                 .eq('is_featured', true)
                 .limit(10)
             return data || []
@@ -529,7 +529,7 @@ const FeaturedWriters: React.FC = () => {
     const { data: writers } = useQuery({
         queryKey: ['featured-writers'],
         queryFn: async () => {
-            const { data } = await supabase.from('authors').select('*').limit(10)
+            const { data } = await supabase.from('writers').select('*').limit(10)
             return data || []
         },
     })
@@ -648,7 +648,7 @@ const TopWishlistedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compa
             // Fallback: fetch any 5 books
             const { data: fallback } = await supabase
                 .from('books')
-                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                 .limit(5)
             return fallback || []
         },
@@ -695,7 +695,7 @@ const RecentlyViewedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, comp
             if (!recentIds.length) return []
             const { data } = await supabase
                 .from('books')
-                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                 .in('id', recentIds)
             return data || []
         },
@@ -838,7 +838,7 @@ const FeaturedBookSection: React.FC = () => {
         queryFn: async () => {
             const { data } = await supabase
                 .from('books')
-                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                 .eq('is_featured', true)
                 .limit(1)
                 .single()
@@ -874,7 +874,7 @@ const FeaturedBookSection: React.FC = () => {
                     <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
                         {book.title}
                     </h2>
-                    <p className="text-xl text-[#c9a84c]">লেখক: {book.authors?.name}</p>
+                    <p className="text-xl text-[#c9a84c]">লেখক: {book.writers?.name}</p>
                     <p className="text-[#8899bb] leading-relaxed line-clamp-3 md:line-clamp-4">
                         {book.description || 'বইটি সম্পর্কে বিস্তারিত জানতে নিচে ক্লিক করুন।'}
                     </p>

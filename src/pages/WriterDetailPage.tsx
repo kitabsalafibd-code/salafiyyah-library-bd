@@ -17,7 +17,7 @@ const WriterDetailPage: React.FC = () => {
     const { data: writer } = useQuery({
         queryKey: ['writer', id],
         queryFn: async () => {
-            const { data } = await supabase.from('authors').select('*').eq('id', id).single()
+            const { data } = await supabase.from('writers').select('*').eq('id', id).single()
             return data
         },
         enabled: !!id,
@@ -28,7 +28,7 @@ const WriterDetailPage: React.FC = () => {
         queryFn: async () => {
             const { data } = await supabase
                 .from('books')
-                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                 .eq('author_id', id)
             return data || []
         },

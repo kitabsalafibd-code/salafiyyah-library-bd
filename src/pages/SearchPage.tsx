@@ -47,7 +47,7 @@ const SearchPage: React.FC = () => {
             if (!q.trim()) return []
             let query = supabase
                 .from('books')
-                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .select('*, writers:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
                 .ilike('title', `%${q}%`)
 
             if (categoryFilter) query = query.eq('category_id', categoryFilter)

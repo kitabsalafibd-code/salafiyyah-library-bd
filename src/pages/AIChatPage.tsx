@@ -23,7 +23,9 @@ const AIChatPage: React.FC = () => {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     useEffect(() => {
-        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        if (messages.length > 1 || loading) {
+            chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }
     }, [messages, loading])
 
     const handleSend = useCallback(async () => {

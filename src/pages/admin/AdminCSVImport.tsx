@@ -46,9 +46,9 @@ const AdminCSVImportPanel: React.FC = () => {
                 // Find or create author
                 let author_id = null
                 if (row.author_name?.trim()) {
-                    const { data: existing } = await supabase.from('authors').select('id').ilike('name', row.author_name.trim()).limit(1).single()
+                    const { data: existing } = await supabase.from('writers').select('id').ilike('name', row.author_name.trim()).limit(1).single()
                     if (existing) { author_id = existing.id }
-                    else { const { data: created } = await supabase.from('authors').insert({ name: row.author_name.trim() }).select('id').single(); author_id = created?.id }
+                    else { const { data: created } = await supabase.from('writers').insert({ name: row.author_name.trim() }).select('id').single(); author_id = created?.id }
                 }
                 // Find or create publisher
                 let publisher_id = null

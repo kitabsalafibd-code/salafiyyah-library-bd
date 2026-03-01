@@ -9,9 +9,9 @@ const AdminAnalyticsPanel: React.FC = () => {
     const { data: stats } = useQuery({
         queryKey: ['analytics-stats'],
         queryFn: async () => {
-            const [books, authors, users, wishlists, reviews] = await Promise.all([
+            const [books, writers, users, wishlists, reviews] = await Promise.all([
                 supabase.from('books').select('id', { count: 'exact', head: true }),
-                supabase.from('authors').select('id', { count: 'exact', head: true }),
+                supabase.from('writers').select('id', { count: 'exact', head: true }),
                 supabase.from('profiles').select('id', { count: 'exact', head: true }),
                 supabase.from('wishlists').select('id', { count: 'exact', head: true }),
                 supabase.from('reviews').select('id', { count: 'exact', head: true }),
@@ -20,7 +20,7 @@ const AdminAnalyticsPanel: React.FC = () => {
             const today = new Date().toISOString().split('T')[0]
             const { count: todayUsers } = await supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', today)
             return {
-                books: books.count || 0, authors: authors.count || 0, users: users.count || 0,
+                books: books.count || 0, writers: writers.count || 0, users: users.count || 0,
                 wishlists: wishlists.count || 0, reviews: reviews.count || 0, todayUsers: todayUsers || 0,
             }
         },
@@ -88,7 +88,7 @@ const AdminAnalyticsPanel: React.FC = () => {
 
     const statCards = [
         { label: 'মোট বই', value: stats?.books, icon: '📚', color: 'from-blue-600 to-blue-800' },
-        { label: 'মোট লেখক', value: stats?.authors, icon: '✍️', color: 'from-purple-600 to-purple-800' },
+        { label: 'মোট লেখক', value: stats?.writers, icon: '✍️', color: 'from-purple-600 to-purple-800' },
         { label: 'মোট ব্যবহারকারী', value: stats?.users, icon: '👥', color: 'from-green-600 to-green-800' },
         { label: 'মোট উইশলিস্ট', value: stats?.wishlists, icon: '❤️', color: 'from-red-600 to-red-800' },
         { label: 'মোট রিভিউ', value: stats?.reviews, icon: '📝', color: 'from-yellow-600 to-yellow-800' },

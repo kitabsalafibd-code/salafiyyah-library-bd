@@ -29,12 +29,12 @@ const AdminBooksPanel: React.FC = () => {
     const { data: books, isLoading } = useQuery({
         queryKey: ['admin-books'],
         queryFn: async () => {
-            const { data } = await supabase.from('books').select('*, authors:author_id(name), categories:category_id(name)').order('created_at', { ascending: false })
+            const { data } = await supabase.from('books').select('*, writers:author_id(name), categories:category_id(name)').order('created_at', { ascending: false })
             return data || []
         },
     })
 
-    const { data: authors } = useQuery({ queryKey: ['all-authors'], queryFn: async () => { const { data } = await supabase.from('authors').select('id, name').order('name'); return data || [] } })
+    const { data: authors } = useQuery({ queryKey: ['all-writers'], queryFn: async () => { const { data } = await supabase.from('writers').select('id, name').order('name'); return data || [] } })
     const { data: publishers } = useQuery({ queryKey: ['all-publishers'], queryFn: async () => { const { data } = await supabase.from('publishers').select('id, name').order('name'); return data || [] } })
     const { data: categories } = useQuery({ queryKey: ['all-categories'], queryFn: async () => { const { data } = await supabase.from('categories').select('id, name').order('name'); return data || [] } })
 
