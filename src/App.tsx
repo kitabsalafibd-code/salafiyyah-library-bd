@@ -16,6 +16,7 @@ import DashboardPage from './pages/DashboardPage'
 // Lazy loaded pages
 const HomePage = lazy(() => import('./pages/HomePage'))
 const BooksPage = lazy(() => import('./pages/BooksPage'))
+const PublicProfilePage = lazy(() => import('./pages/PublicProfilePage'))
 const BookDetailPage = lazy(() => import('./pages/BookDetailPage'))
 const WritersPage = lazy(() => import('./pages/WritersPage'))
 const WriterDetailPage = lazy(() => import('./pages/WriterDetailPage'))
@@ -36,6 +37,7 @@ const TopBooksPage = lazy(() => import('./pages/TopBooksPage'))
 const EventsPage = lazy(() => import('./pages/EventsPage'))
 const AsmaulHusnaPage = lazy(() => import('./pages/AsmaulHusnaPage'))
 const DuaPage = lazy(() => import('./pages/DuaPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
 
 function App() {
   return (
@@ -89,6 +91,7 @@ function App() {
                   <Route path="/events" element={<EventsPage />} />
                   <Route path="/asmaul-husna" element={<AsmaulHusnaPage />} />
                   <Route path="/dua" element={<DuaPage />} />
+                  <Route path="/about" element={<AboutPage />} />
                 </Routes>
               </Suspense>
             } />

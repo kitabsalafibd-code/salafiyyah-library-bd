@@ -1,57 +1,56 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../lib/supabase'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import NotificationBell from './NotificationBell'
 
-const navLinks = [
+const mainLinks = [
     { label: 'বই', to: '/books' },
     { label: 'লেখক', to: '/writers' },
     { label: 'প্রকাশনী', to: '/publishers' },
-    { label: 'শীর্ষ বই', to: '/top-books' },
-    { label: 'AI সহকারী', to: '/ai' },
+]
+
+const moreLinks = [
+    { label: '📖 আল-কুরআন', to: '/quran' },
+    { label: '📜 হাদীস', to: '/hadith' },
+    { label: '🕌 সালাতের সময়', to: '/salah' },
+    { label: '🤲 দৈনিক দুআ', to: '/dua' },
+    { label: '☪️ আসমাউল হুসনা', to: '/asmaul-husna' },
+    { label: '🗓️ ইসলামিক ইভেন্ট', to: '/events' },
+    { label: '🏆 শীর্ষ বই', to: '/top-books' },
+    { label: 'সম্পর্কে', to: '/about' },
 ]
 
 const Navbar: React.FC = () => {
     const { user, signOut } = useAuth()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [dropdownOpen, setDropdownOpen] = useState(false)
-    const [theme, setTheme] = useState<'dark' | 'light'>(localStorage.getItem('theme') as 'dark' | 'light' || 'dark')
+    const [userDropdownOpen, setUserDropdownOpen] = useState(false)
+    const [moreDropdownOpen, setMoreDropdownOpen] = useState(false)
+    const [mobileMoreOpen, setMobileMoreOpen] = useState(false)
     const [hijriDate, setHijriDate] = useState<string>(localStorage.getItem('hijri-date') || '')
-    const location = useLocation()
-    const dropdownRef = useRef<HTMLDivElement>(null)
-
-    const { data: categories } = useQuery({
-        queryKey: ['categories'],
-        queryFn: async () => {
-            const { data } = await supabase.from('categories').select('*').order('name')
-            return data || []
-        },
-        staleTime: 30 * 60 * 1000,
-    })
+    const [logoExists, setLogoExists] = useState(false)
+    const userDropdownRef = useRef<HTMLDivElement>(null)
+    const moreDropdownRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-                setDropdownOpen(false)
+            if (userDropdownRef.current && !userDropdownRef.current.contains(e.target as Node)) {
+                setUserDropdownOpen(false)
+            }
+            if (moreDropdownRef.current && !moreDropdownRef.current.contains(e.target as Node)) {
+                setMoreDropdownOpen(false)
             }
         }
         document.addEventListener('mousedown', handleClickOutside)
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
 
-    // Theme logic
+    // Logo check
     useEffect(() => {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-        localStorage.setItem('theme', theme)
-    }, [theme])
-
-    const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark')
+        const img = new Image()
+        img.src = '/logo.png'
+        img.onload = () => setLogoExists(true)
+        img.onerror = () => setLogoExists(false)
+    }, [])
 
     // Hijri Date logic
     useEffect(() => {
@@ -88,57 +87,96 @@ const Navbar: React.FC = () => {
     return (
         <header className="sticky top-0 z-50 bg-[#0a0f1e]/95 backdrop-blur-md border-b border-blue-800/30">
             {/* Main navbar */}
-            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-                {/* Logo */}
+            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                {/* Logo + site name */}
                 <Link to="/" className="flex items-center gap-2 shrink-0">
-                    <span className="text-2xl">📖</span>
+                    {logoExists ? (
+                        <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+                    ) : (
+                        <span className="text-2xl">📖</span>
+                    )}
                     <span className="text-lg md:text-xl font-bold text-[#f0c040] whitespace-nowrap">
                         Salafiyyah Library BD
                     </span>
                 </Link>
 
-                {/* Center: Hijri Date (Desktop) */}
-                <div className="hidden lg:flex items-center gap-2 text-xs text-[#8899bb] bg-[#111a33] px-3 py-1.5 rounded-full border border-blue-800/20">
-                    <span className="text-base">📅</span>
-                    <span>{hijriDate || 'লোড হচ্ছে...'}</span>
+                {/* Desktop Menu */}
+                <div className="hidden lg:flex items-center gap-6 flex-1 justify-center">
+                    {mainLinks.map((link) => (
+                        <Link
+                            key={link.to}
+                            to={link.to}
+                            className="text-sm font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
+
+                    <div className="relative" ref={moreDropdownRef}>
+                        <button
+                            onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                            onMouseEnter={() => setMoreDropdownOpen(true)}
+                            className="text-sm font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors flex items-center gap-1"
+                        >
+                            আরও ▾
+                        </button>
+                        {moreDropdownOpen && (
+                            <div
+                                className="absolute left-0 top-full pt-2 w-56"
+                                onMouseLeave={() => setMoreDropdownOpen(false)}
+                            >
+                                <div className="bg-[#0d1428] border border-blue-800/40 rounded-xl shadow-2xl overflow-hidden py-2">
+                                    {moreLinks.map((link) => (
+                                        <Link
+                                            key={link.to}
+                                            to={link.to}
+                                            onClick={() => setMoreDropdownOpen(false)}
+                                            className="block px-4 py-2.5 text-sm text-[#8899bb] hover:text-[#f0c040] hover:bg-[#1a3a8f]/30 transition-colors"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <Link
+                        to="/ai"
+                        className="text-sm font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
+                    >
+                        AI সহকারী
+                    </Link>
                 </div>
 
-                {/* Spacer to push right items */}
-                <div className="flex-1" />
-
                 {/* Right side */}
-                <div className="flex items-center gap-2 shrink-0">
-                    {/* Theme Toggle */}
-                    <button
-                        onClick={toggleTheme}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#111a33] border border-blue-800/30 text-[#f0c040] hover:bg-[#1a3a8f] transition-all"
-                        title={theme === 'dark' ? 'লাইট মোড' : 'ডার্ক মোড'}
-                    >
-                        {theme === 'dark' ? '☀️' : '🌙'}
-                    </button>
+                <div className="flex items-center gap-4">
+                    {/* Hijri Date (Desktop) */}
+                    <div className="hidden xl:flex items-center gap-2 text-xs text-[#8899bb] bg-[#111a33] px-3 py-1.5 rounded-full border border-blue-800/20">
+                        <span className="text-base">📅</span>
+                        <span>{hijriDate || 'লোড হচ্ছে...'}</span>
+                    </div>
 
                     {user ? (
                         <>
-                            {/* Notification bell */}
                             <NotificationBell />
-                            {/* Avatar dropdown */}
-                            <div className="relative" ref={dropdownRef}>
+                            <div className="relative" ref={userDropdownRef}>
                                 <button
-                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                                     className="w-9 h-9 rounded-full bg-[#1a3a8f] flex items-center justify-center text-white font-bold text-sm hover:bg-[#2952cc] transition-colors"
                                 >
                                     {userInitial}
                                 </button>
-                                {dropdownOpen && (
+                                {userDropdownOpen && (
                                     <div className="absolute right-0 top-12 w-48 bg-[#0d1428] border border-blue-800/40 rounded-xl shadow-2xl overflow-hidden">
-                                        <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="block px-4 py-3 text-sm hover:bg-[#1a3a8f]/30 transition-colors">
+                                        <Link to="/dashboard" onClick={() => setUserDropdownOpen(false)} className="block px-4 py-3 text-sm hover:bg-[#1a3a8f]/30 transition-colors">
                                             📊 ড্যাশবোর্ড
                                         </Link>
-                                        <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="block px-4 py-3 text-sm hover:bg-[#1a3a8f]/30 transition-colors">
+                                        <Link to="/dashboard" onClick={() => setUserDropdownOpen(false)} className="block px-4 py-3 text-sm hover:bg-[#1a3a8f]/30 transition-colors">
                                             ❤️ উইশলিস্ট
                                         </Link>
                                         <button
-                                            onClick={() => { signOut(); setDropdownOpen(false) }}
+                                            onClick={() => { signOut(); setUserDropdownOpen(false) }}
                                             className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
                                         >
                                             🚪 লগআউট
@@ -148,7 +186,7 @@ const Navbar: React.FC = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="flex items-center gap-2">
+                        <div className="hidden md:flex items-center gap-2">
                             <Link to="/login" className="px-4 py-2 text-sm text-[#8899bb] hover:text-white transition-colors">
                                 লগইন
                             </Link>
@@ -161,9 +199,9 @@ const Navbar: React.FC = () => {
                     {/* Mobile menu button */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden text-[#8899bb] hover:text-white"
+                        className="md:hidden p-2 text-[#8899bb] hover:text-white transition-colors"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             {mobileMenuOpen ? (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             ) : (
@@ -174,51 +212,72 @@ const Navbar: React.FC = () => {
                 </div>
             </div>
 
-            {/* Nav links - desktop */}
-            <nav className="hidden md:block border-t border-blue-800/20">
-                <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.to}
-                            to={link.to}
-                            className="px-3 py-1.5 text-sm text-[#8899bb] hover:text-[#f0c040] whitespace-nowrap transition-colors rounded-lg hover:bg-[#1a3a8f]/20"
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-                </div>
-            </nav>
-
-            {/* Category pills - Only show on home page to avoid duplicates on /books */}
-            {categories && categories.length > 0 && location.pathname === '/' && (
-                <div className="border-t border-blue-800/20 overflow-x-auto scrollbar-hide">
-                    <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-2">
-                        {categories.map((cat: any) => (
-                            <Link
-                                key={cat.id}
-                                to={`/books?category=${cat.slug}`}
-                                className="category-pill px-3 py-1 text-xs bg-[#1a3a8f]/30 text-[#8899bb] rounded-full border border-blue-800/30 hover:text-white whitespace-nowrap"
-                            >
-                                {cat.name}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            )}
-
             {/* Mobile menu */}
             {mobileMenuOpen && (
-                <div className="md:hidden bg-[#0a0f1e] border-t border-blue-800/30 px-4 py-4 space-y-2">
-                    {navLinks.map((link) => (
+                <div className="md:hidden bg-[#0a0f1e] border-t border-blue-800/30 fixed inset-x-0 top-[65px] bottom-0 z-40 overflow-y-auto pb-20">
+                    <div className="px-6 py-8 space-y-4">
+                        {mainLinks.map((link) => (
+                            <Link
+                                key={link.to}
+                                to={link.to}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block text-lg font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+
+                        <div className="space-y-4">
+                            <button
+                                onClick={() => setMobileMoreOpen(!mobileMoreOpen)}
+                                className="w-full flex items-center justify-between text-lg font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
+                            >
+                                <span>আরও</span>
+                                <span>{mobileMoreOpen ? '▴' : '▾'}</span>
+                            </button>
+                            {mobileMoreOpen && (
+                                <div className="pl-4 space-y-4 border-l border-blue-800/20">
+                                    {moreLinks.map((link) => (
+                                        <Link
+                                            key={link.to}
+                                            to={link.to}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="block text-base text-[#8899bb] hover:text-[#f0c040] transition-colors"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         <Link
-                            key={link.to}
-                            to={link.to}
+                            to="/ai"
                             onClick={() => setMobileMenuOpen(false)}
-                            className="block px-3 py-2 text-[#8899bb] hover:text-[#f0c040] rounded-lg hover:bg-[#1a3a8f]/20 transition-colors"
+                            className="block text-lg font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
                         >
-                            {link.label}
+                            AI সহকারী
                         </Link>
-                    ))}
+
+                        {!user && (
+                            <div className="pt-8 flex flex-col gap-4">
+                                <Link
+                                    to="/login"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="w-full py-3 text-center rounded-xl border border-blue-800/30 text-[#8899bb] hover:text-white transition-colors"
+                                >
+                                    লগইন
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="w-full py-3 text-center rounded-xl bg-[#1a3a8f] hover:bg-[#2952cc] text-white transition-colors"
+                                >
+                                    রেজিস্টার
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </header>
@@ -226,3 +285,4 @@ const Navbar: React.FC = () => {
 }
 
 export default React.memo(Navbar)
+

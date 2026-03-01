@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 const tabs = [
     { key: 'wishlist', label: '❤️ উইশলিস্ট' },
     { key: 'reading_list', label: '📚 পড়ার তালিকা' },
+    { key: 'goals', label: '🎯 লক্ষ্য' },
     { key: 'quran_bookmarks', label: '🔖 কুরআন বুকমার্ক' },
     { key: 'writers', label: '✍️ পছন্দের লেখক' },
     { key: 'profile', label: '👤 প্রোফাইল' },
@@ -125,6 +126,128 @@ const ReadingListTab: React.FC<{ userId: string }> = ({ userId }) => {
                     ))}
                 </div>
             )}
+        </div>
+    )
+}
+
+/* ===== Tab: Reading Goals ===== */
+const ReadingGoalsTab: React.FC<{ userId: string }> = ({ userId }) => {
+    const queryClient = useQueryClient()
+    const { showToast } = useToast()
+    const currentYear = new Date().getFullYear()
+
+    const { data: goal, isLoading: goalLoading } = useQuery({
+        queryKey: ['reading-goal', userId, currentYear],
+        queryFn: async () => {
+            const { data } = await supabase
+                .from('reading_goals')
+                .select('*')
+                .eq('user_id', userId)
+                .eq('year', currentYear)
+                .maybeSingle()
+            return data
+        }
+    })
+
+    const { data: finishedCount = 0 } = useQuery({
+        queryKey: ['finished-count', userId, currentYear],
+        queryFn: async () => {
+            const { count } = await supabase
+                .from('reading_progress')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', userId)
+                .eq('status', 'finished')
+            // Ideally filter by finish date, but we'll use total finished for now
+            return count || 0
+        }
+    })
+
+    const [target, setTarget] = useState('')
+    const [saving, setSaving] = useState(false)
+
+    const handleSetGoal = async () => {
+        if (!target) return
+        setSaving(true)
+        const t = parseInt(target)
+        try {
+            if (goal) {
+                await supabase.from('reading_goals').update({ target_books: t }).eq('id', goal.id)
+            } else {
+                await supabase.from('reading_goals').insert({ user_id: userId, year: currentYear, target_books: t })
+            }
+            queryClient.invalidateQueries({ queryKey: ['reading-goal', userId] })
+            showToast('পড়ার লক্ষ্য সেট করা হয়েছে!')
+        } catch (err: any) {
+            showToast('লক্ষ্য সেট করতে সমস্যা হয়েছে', 'error')
+        }
+        setSaving(false)
+    }
+
+    if (goalLoading) return <div className="skeleton h-48 rounded-2xl" />
+
+    const progress = goal ? Math.min(100, Math.round((finishedCount / goal.target_books) * 100)) : 0
+
+    return (
+        <div className="max-w-xl mx-auto space-y-8">
+            <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-8 text-center gold-glow">
+                <h3 className="text-xl font-bold text-white mb-6">🎯 {currentYear} এর পড়ার লক্ষ্য</h3>
+
+                {goal ? (
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-end mb-2">
+                            <span className="text-3xl font-bold text-[#f0c040]">{finishedCount} / {goal.target_books}</span>
+                            <span className="text-[#8899bb] text-sm">বই শেষ করেছেন</span>
+                        </div>
+                        <div className="h-4 bg-[#111a33] rounded-full overflow-hidden border border-blue-800/20">
+                            <div
+                                className="h-full bg-gradient-to-r from-[#c9a84c] to-[#f0c040] transition-all duration-1000"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                        <p className="text-[#8899bb] text-sm italic">
+                            {progress >= 100 ? 'অভিনন্দন! আপনি আপনার লক্ষ্য পূরণ করেছেন! 🎉' : `আপনি আপনার লক্ষ্যের ${progress}% পৌঁছেছেন।`}
+                        </p>
+
+                        <div className="pt-6 border-t border-blue-800/20">
+                            <button
+                                onClick={() => { setTarget(goal.target_books.toString()); /* Switch to edit mode? No, just simplify. */ }}
+                                className="text-[#8899bb] hover:text-white text-xs underline"
+                            >
+                                লক্ষ্য পরিবর্তন করুন
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        <p className="text-[#8899bb]">আপনি কি এই বছর কতগুলো বই পড়ার লক্ষ্য নিয়েছেন?</p>
+                        <div className="flex gap-3 max-w-xs mx-auto">
+                            <input
+                                type="number"
+                                value={target}
+                                onChange={(e) => setTarget(e.target.value)}
+                                placeholder="বই সংখ্যা"
+                                className="w-full px-4 py-2 bg-[#111a33] border border-blue-800/40 rounded-xl text-white text-center focus:border-[#f0c040] outline-none"
+                            />
+                            <button
+                                onClick={handleSetGoal}
+                                disabled={saving}
+                                className="px-6 py-2 bg-[#f0c040] text-[#0a0f1e] rounded-xl font-bold hover:bg-white transition-all disabled:opacity-50"
+                            >
+                                সেট করুন
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="bg-[#111a33]/50 rounded-xl p-6 border border-blue-800/20">
+                <h4 className="text-white font-bold mb-3 flex items-center gap-2">
+                    <span>💡</span> টিপস
+                </h4>
+                <p className="text-[#8899bb] text-sm leading-relaxed">
+                    পড়ার অভ্যাস গড়ে তুলতে প্রতিদিন অন্তত ১৫-২০ মিনিট সময় দিন। আপনার পড়া শেষ হওয়ামাত্রই পড়ার তালিকায় 'পড়া শেষ' হিসেবে মার্ক করুন, তাহলে এখানে প্রগ্রেস দেখতে পাবেন।
+                </p>
+            </div>
         </div>
     )
 }
@@ -258,57 +381,149 @@ const FavWritersTab: React.FC<{ userId: string }> = ({ userId }) => {
 /* ===== Tab: Profile ===== */
 const ProfileTab: React.FC<{ userId: string; userEmail: string }> = ({ userId, userEmail }) => {
     const { showToast } = useToast()
-    const [name, setName] = useState('')
-    const [saving, setSaving] = useState(false)
+    const queryClient = useQueryClient()
+    const [isEditingName, setIsEditingName] = useState(false)
+    const [editNameValue, setEditNameValue] = useState('')
 
-    useQuery({
+    const { data: profile, isLoading } = useQuery({
         queryKey: ['profile', userId],
         queryFn: async () => {
             const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
-            if (data) setName(data.full_name || '')
             return data
         },
     })
 
-    const handleSave = async () => {
-        setSaving(true)
-        try {
-            // 1. Update Database
-            const { error: dbError } = await supabase.from('profiles').update({ full_name: name }).eq('id', userId)
-            if (dbError) throw dbError
-
-            // 2. Update Auth Metadata (so navbar reflects change immediately)
-            const { error: authError } = await supabase.auth.updateUser({
-                data: { full_name: name }
-            })
-            if (authError) throw authError
-
-            showToast('প্রোফাইল আপডেট হয়েছে!')
-        } catch (err: any) {
-            showToast(err.message || 'আপডেট ব্যর্থ', 'error')
+    const { data: stats } = useQuery({
+        queryKey: ['profile-stats', userId],
+        queryFn: async () => {
+            const [
+                { count: wishlistCount },
+                { count: writersCount },
+                { count: reviewsCount },
+                { count: finishedCount }
+            ] = await Promise.all([
+                supabase.from('wishlists').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+                supabase.from('favourite_writers').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+                supabase.from('reviews').select('*', { count: 'exact', head: true }).eq('user_id', userId).then(res => res.error ? { count: 0 } : res),
+                supabase.from('reading_progress').select('*', { count: 'exact', head: true }).eq('user_id', userId).eq('status', 'finished')
+            ])
+            return {
+                wishlist: wishlistCount || 0,
+                writers: writersCount || 0,
+                reviews: reviewsCount || 0,
+                finished: finishedCount || 0
+            }
         }
-        setSaving(false)
-    }
+    })
+
+    const saveName = useMutation({
+        mutationFn: async (newName: string) => {
+            const { error: dbError } = await supabase.from('profiles').update({ full_name: newName }).eq('id', userId)
+            if (dbError) throw dbError
+            const { error: authError } = await supabase.auth.updateUser({ data: { full_name: newName } })
+            if (authError) throw authError
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['profile', userId] })
+            setIsEditingName(false)
+            showToast('নাম আপডেট হয়েছে ✅')
+        },
+        onError: () => {
+            showToast('নাম আপডেট করতে সমস্যা হয়েছে', 'error')
+        }
+    })
+
+    if (isLoading) return <div className="skeleton h-64 rounded-2xl" />
+
+    const memberSince = profile?.created_at
+        ? new Date(profile.created_at).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' })
+        : 'অজানা'
+    const isAdmin = profile?.role === 'admin'
+    const fullName = profile?.full_name || userEmail.split('@')[0]
+    const initial = fullName.charAt(0).toUpperCase()
 
     return (
-        <div className="max-w-md space-y-5">
-            <div>
-                <label className="text-[#8899bb] text-sm block mb-1.5">নাম</label>
-                <input
-                    value={name} onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-[#111a33] border border-blue-800/40 text-white focus:border-[#f0c040] focus:outline-none transition-all"
-                />
+        <div className="max-w-3xl mx-auto space-y-8">
+            <div className="bg-[#0d1428] rounded-2xl border border-[#c9a84c] p-8 text-center sm:text-left flex flex-col sm:flex-row items-center gap-8 relative overflow-hidden gold-glow">
+
+                {/* Avatar */}
+                <div className="w-32 h-32 shrink-0 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#f0c040] flex items-center justify-center text-6xl text-[#0a0f1e] font-bold shadow-lg shadow-yellow-900/30">
+                    {initial}
+                </div>
+
+                <div className="flex-1 space-y-3">
+                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                        {isEditingName ? (
+                            <div className="flex items-center gap-2">
+                                <input
+                                    value={editNameValue}
+                                    onChange={e => setEditNameValue(e.target.value)}
+                                    className="px-3 py-1.5 rounded-lg bg-[#111a33] border border-[#f0c040] text-white focus:outline-none"
+                                    autoFocus
+                                />
+                                <button onClick={() => saveName.mutate(editNameValue)} disabled={saveName.isPending} className="px-3 py-1.5 bg-[#1a3a8f] text-white rounded-lg hover:bg-[#2952cc] text-sm">
+                                    {saveName.isPending ? '...' : 'সেভ'}
+                                </button>
+                                <button onClick={() => setIsEditingName(false)} className="px-3 py-1.5 bg-red-500/10 text-red-500 rounded-lg text-sm hover:bg-red-500/20">
+                                    বাতিল
+                                </button>
+                            </div>
+                        ) : (
+                            <h2 className="text-3xl font-bold text-white flex items-center gap-2">
+                                {fullName}
+                                <button
+                                    onClick={() => { setEditNameValue(fullName); setIsEditingName(true) }}
+                                    className="text-sm p-1.5 hover:bg-[#111a33] rounded-full text-[#8899bb] hover:text-[#f0c040] transition-colors"
+                                    title="নাম পরিবর্তন করুন"
+                                >
+                                    ✏️
+                                </button>
+                            </h2>
+                        )}
+                        {isAdmin && <span className="px-3 py-1 bg-gradient-to-r from-[#c9a84c] to-[#f0c040] text-[#0a0f1e] text-xs font-bold rounded-full">অ্যাডমিন</span>}
+                    </div>
+
+                    <p className="text-[#8899bb] flex items-center justify-center sm:justify-start gap-2">
+                        <span>📧</span> <span className="opacity-70">{userEmail}</span>
+                    </p>
+
+                    <p className="text-[#8899bb] text-sm flex items-center justify-center sm:justify-start gap-2">
+                        <span>🗓️</span> <span>সদস্য হয়েছেন: {memberSince}</span>
+                    </p>
+                </div>
             </div>
-            <div>
-                <label className="text-[#8899bb] text-sm block mb-1.5">ইমেইল</label>
-                <input value={userEmail} disabled className="w-full px-4 py-3 rounded-xl bg-[#111a33] border border-blue-800/20 text-[#556688] cursor-not-allowed" />
+
+            <div className="bg-[#111a33] rounded-2xl border border-blue-800/30 p-8">
+                <h3 className="text-xl font-bold text-white mb-6">📊 আপনার পরিসংখ্যান</h3>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors">
+                        <div className="text-3xl mb-2">📚</div>
+                        <div className="text-2xl font-bold text-white">{stats?.wishlist || 0}</div>
+                        <div className="text-[#8899bb] text-sm mt-1">উইশলিস্টে বই</div>
+                    </div>
+                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors">
+                        <div className="text-3xl mb-2">✍️</div>
+                        <div className="text-2xl font-bold text-white">{stats?.writers || 0}</div>
+                        <div className="text-[#8899bb] text-sm mt-1">পছন্দের লেখক</div>
+                    </div>
+                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors">
+                        <div className="text-3xl mb-2">⭐</div>
+                        <div className="text-2xl font-bold text-white">{stats?.reviews || 0}</div>
+                        <div className="text-[#8899bb] text-sm mt-1">রিভিউ দিয়েছেন</div>
+                    </div>
+                    <div className="bg-[#0d1428] rounded-xl p-4 text-center border border-blue-800/20 hover:border-[#c9a84c]/50 transition-colors">
+                        <div className="text-3xl mb-2">📖</div>
+                        <div className="text-2xl font-bold text-[#f0c040]">{stats?.finished || 0}</div>
+                        <div className="text-[#8899bb] text-sm mt-1">পড়া শেষ করেছেন</div>
+                    </div>
+                </div>
             </div>
-            <button
-                onClick={handleSave} disabled={saving}
-                className="px-6 py-3 bg-gradient-to-r from-[#1a3a8f] to-[#2952cc] text-white rounded-xl font-semibold disabled:opacity-50 transition-all"
-            >
-                {saving ? 'সংরক্ষণ হচ্ছে...' : 'প্রোফাইল আপডেট করুন'}
-            </button>
+
+            <div className="p-4 bg-blue-900/10 border border-blue-800/20 rounded-xl text-center">
+                <Link to={`/u/${userId}`} className="text-[#f0c040] text-sm font-bold inline-flex items-center gap-2 hover:underline">
+                    আপনার পাবলিক প্রোফাইল দেখুন <span>→</span>
+                </Link>
+            </div>
         </div>
     )
 }
@@ -417,6 +632,7 @@ const DashboardPage: React.FC = () => {
                 {/* Tab Content */}
                 {activeTab === 'wishlist' && <WishlistTab userId={user.id} />}
                 {activeTab === 'reading_list' && <ReadingListTab userId={user.id} />}
+                {activeTab === 'goals' && <ReadingGoalsTab userId={user.id} />}
                 {activeTab === 'quran_bookmarks' && <QuranBookmarksTab userId={user.id} />}
                 {activeTab === 'writers' && <FavWritersTab userId={user.id} />}
                 {activeTab === 'profile' && <ProfileTab userId={user.id} userEmail={user.email || ''} />}

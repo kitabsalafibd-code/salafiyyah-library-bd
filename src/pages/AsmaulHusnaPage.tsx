@@ -104,29 +104,71 @@ const asmaulHusna = [
 ]
 
 const AsmaulHusnaPage: React.FC = () => {
+    const [searchQuery, setSearchQuery] = React.useState('')
+
+    const filteredNames = React.useMemo(() => {
+        return asmaulHusna.filter(name =>
+            name.bangla.includes(searchQuery) ||
+            name.meaning.includes(searchQuery) ||
+            name.number.toString() === searchQuery
+        )
+    }, [searchQuery])
+
     return (
         <>
             <Helmet><title>আসমাউল হুসনা — Salafiyyah Library BD</title></Helmet>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-white mb-2">🌟 আসমাউল হুসনা</h1>
-                    <p className="text-[#8899bb]">আল্লাহর ৯৯টি সুন্দর নাম</p>
+            <div className="max-w-7xl mx-auto px-4 py-12">
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">🌟 আসমাউল হুসনা</h1>
+                    <p className="text-[#8899bb] text-lg">আল্লাহর ৯৯টি সুন্দর নাম</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {asmaulHusna.map((name) => (
+
+                {/* Search Bar */}
+                <div className="max-w-md mx-auto mb-12 relative">
+                    <input
+                        type="text"
+                        placeholder="নাম বা অর্থ লিখে খুঁজুন..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#0d1428] border border-blue-800/40 rounded-2xl text-white placeholder-[#8899bb] focus:outline-none focus:border-[#c9a84c] transition-all"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl opacity-40">🔍</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredNames.map((name) => (
                         <div
                             key={name.number}
-                            className="bg-[#0d1428] rounded-xl border border-blue-800/40 p-5 text-center hover:border-[#c9a84c]/50 gold-glow transition-all"
+                            className="relative bg-[#0d1428] rounded-[12px] border border-[#c9a84c] p-5 text-center gold-glow transition-all hover:shadow-[0_0_15px_rgba(201,168,76,0.3)]"
                         >
-                            <span className="inline-block w-8 h-8 rounded-full bg-[#1a3a8f] text-white text-xs font-bold flex items-center justify-center mx-auto mb-3">
+                            {/* Number badge (top right) */}
+                            <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-[#c9a84c]/20 border border-[#c9a84c]/40 text-[#c9a84c] text-xs font-bold flex items-center justify-center">
                                 {name.number}
-                            </span>
-                            <p className="font-arabic text-2xl text-[#f0c040] mb-2" dir="rtl">{name.arabic}</p>
-                            <p className="text-white font-semibold text-sm">{name.bangla}</p>
-                            <p className="text-[#8899bb] text-xs mt-1">{name.meaning}</p>
+                            </div>
+
+                            {/* Arabic Name */}
+                            <p className="font-arabic text-[28px] text-[#f0c040] mb-4 mt-2" dir="rtl" style={{ fontFamily: 'Amiri, serif' }}>
+                                {name.arabic}
+                            </p>
+
+                            {/* Transliteration */}
+                            <p className="text-[#3d6bff] italic text-sm mb-1">
+                                {name.bangla}
+                            </p>
+
+                            {/* Meaning */}
+                            <p className="text-white font-bold text-base">
+                                {name.meaning}
+                            </p>
                         </div>
                     ))}
                 </div>
+
+                {filteredNames.length === 0 && (
+                    <div className="text-center py-20 text-[#8899bb]">
+                        কোনো নাম খুঁজে পাওয়া যায়নি।
+                    </div>
+                )}
             </div>
         </>
     )

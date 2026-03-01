@@ -72,7 +72,7 @@ const HeroSection: React.FC = () => {
     }, [query])
 
     return (
-        <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#0a0f1e]">
+        <section className="relative md:min-h-[85vh] min-h-[60vh] flex items-center justify-center overflow-hidden bg-[#0a0f1e]">
             {/* Layer 1: Base Gradient */}
             <div className="absolute inset-0 bg-[linear-gradient(135deg,#0a0f1e_0%,#0d1f4a_40%,#0a1535_70%,#0a0f1e_100%)]" />
 
@@ -297,6 +297,43 @@ const SalahTimesWidget: React.FC = () => {
                         )}
                     </div>
                 ))}
+            </div>
+        </section>
+    )
+}
+
+/* ========== 3.5 New Arrivals ========== */
+const NewArrivals: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds }) => {
+    const { data: books, isLoading } = useQuery({
+        queryKey: ['new-arrivals'],
+        queryFn: async () => {
+            const { data } = await supabase
+                .from('books')
+                .select('*, authors:author_id(*), publishers:publisher_id(*), categories:category_id(*)')
+                .order('created_at', { ascending: false })
+                .limit(10)
+            return data || []
+        },
+    })
+
+    return (
+        <section className="max-w-7xl mx-auto px-4 my-12">
+            <h2 className="text-xl font-bold text-white mb-4">🆕 নতুন আসা বই</h2>
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
+                {isLoading
+                    ? Array.from({ length: 5 }).map((_, i) => (
+                        <div key={i} className="min-w-[200px] max-w-[200px]"><BookCardSkeleton /></div>
+                    ))
+                    : books?.map((book: any) => (
+                        <div key={book.id} className="min-w-[200px] max-w-[200px]">
+                            <BookCard
+                                book={book}
+                                onCompareToggle={onCompareToggle}
+                                isCompareSelected={compareIds.includes(book.id)}
+                            />
+                        </div>
+                    ))
+                }
             </div>
         </section>
     )
@@ -775,6 +812,7 @@ const HomePage: React.FC = () => {
             <FeaturedBookSection />
             <SalahTimesWidget />
             <IslamicQuoteSection />
+            <NewArrivals onCompareToggle={toggleCompare} compareIds={compareIds} />
             {/* Featured */}
             <FeaturedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
             <HadithOfTheDay />
