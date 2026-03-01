@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+/* Custom Design Tokens */
+@theme {
+  --color-navy: #0a0f1e;
+  --color-navy-light: #0d1428;
+  --color-navy-card: #111a33;
+  --color-primary-dark: #1a3a8f;
+  --color-primary: #2952cc;
+  --color-primary-light: #3d6bff;
+  --color-gold: #c9a84c;
+  --color-gold-bright: #f0c040;
+  --color-text-sub: #8899bb;
+  --color-border-blue: rgba(30, 64, 175, 0.4);
+  --font-bangla: "Hind Siliguri", sans-serif;
+  --font-arabic: "Amiri", serif;
+}
+
+/* Base styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1a3a8f #0a0f1e;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #0a0f1e;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #1a3a8f;
+  border-radius: 3px;
+}
+
+body {
+  font-family: var(--font-bangla);
+  background-color: var(--color-navy);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Arabic text */
+.font-arabic {
+  font-family: var(--font-arabic);
+  direction: rtl;
+}
+
+/* Skeleton loading animation */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.1; }
+}
+
+.skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: linear-gradient(90deg, #111a33 25%, #1a2744 50%, #111a33 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 0.5rem;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Gold glow on hover */
+.gold-glow:hover {
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.3), 0 0 40px rgba(201, 168, 76, 0.1);
+}
+
+/* Dhikr rotation animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dhikr-animate {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Islamic geometric pattern bg */
+.islamic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a3a8f' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Category pill styles */
+.category-pill {
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.category-pill:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
