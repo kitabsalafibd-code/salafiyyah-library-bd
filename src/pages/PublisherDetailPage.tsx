@@ -5,9 +5,11 @@ import { Helmet } from 'react-helmet-async'
 import { supabase } from '../lib/supabase'
 import BookCard from '../components/BookCard'
 import { BookCardSkeleton } from '../components/Skeleton'
+import { useCompare } from '../hooks/useCompare'
 
 const PublisherDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>()
+    const { compareIds, toggleCompare } = useCompare()
 
     const { data: publisher } = useQuery({
         queryKey: ['publisher', id],
@@ -47,7 +49,17 @@ const PublisherDetailPage: React.FC = () => {
                 </div>
                 <h2 className="text-xl font-bold text-white mb-4">📚 এই প্রকাশনীর বই ({books?.length || 0})</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                    {isLoading ? Array.from({ length: 5 }).map((_, i) => <BookCardSkeleton key={i} />) : books?.map((b: any) => <BookCard key={b.id} book={b} />)}
+                    {isLoading
+                        ? Array.from({ length: 5 }).map((_, i) => <BookCardSkeleton key={i} />)
+                        : books?.map((b: any) => (
+                            <BookCard
+                                key={b.id}
+                                book={b}
+                                onCompareToggle={toggleCompare}
+                                isCompareSelected={compareIds.includes(b.id)}
+                            />
+                        ))
+                    }
                 </div>
             </div>
         </>

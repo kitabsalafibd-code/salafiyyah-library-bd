@@ -6,11 +6,13 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import BookCard from '../components/BookCard'
 import { BookCardSkeleton } from '../components/Skeleton'
+import { useCompare } from '../hooks/useCompare'
 
 const WriterDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>()
     const { user } = useAuth()
     const [isFav, setIsFav] = useState(false)
+    const { compareIds, toggleCompare } = useCompare()
 
     const { data: writer } = useQuery({
         queryKey: ['writer', id],
@@ -73,7 +75,17 @@ const WriterDetailPage: React.FC = () => {
                 </div>
                 <h2 className="text-xl font-bold text-white mb-4">📚 এই লেখকের বই ({books?.length || 0})</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                    {isLoading ? Array.from({ length: 5 }).map((_, i) => <BookCardSkeleton key={i} />) : books?.map((b: any) => <BookCard key={b.id} book={b} />)}
+                    {isLoading
+                        ? Array.from({ length: 5 }).map((_, i) => <BookCardSkeleton key={i} />)
+                        : books?.map((b: any) => (
+                            <BookCard
+                                key={b.id}
+                                book={b}
+                                onCompareToggle={toggleCompare}
+                                isCompareSelected={compareIds.includes(b.id)}
+                            />
+                        ))
+                    }
                 </div>
             </div>
         </>

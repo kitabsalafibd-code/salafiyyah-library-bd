@@ -41,6 +41,7 @@ body {
   background-color: var(--color-navy);
   color: #ffffff;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Arabic text */
@@ -51,8 +52,15 @@ body {
 
 /* Skeleton loading animation */
 @keyframes skeleton-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.1; }
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
 }
 
 .skeleton {
@@ -64,8 +72,13 @@ body {
 }
 
 @keyframes skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Gold glow on hover */
@@ -75,8 +88,15 @@ body {
 
 /* Dhikr rotation animation */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dhikr-animate {
@@ -92,6 +112,7 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -102,6 +123,7 @@ body {
   white-space: nowrap;
   transition: all 0.2s ease;
 }
+
 .category-pill:hover {
   background-color: var(--color-primary);
   color: white;

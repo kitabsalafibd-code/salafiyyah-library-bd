@@ -441,6 +441,7 @@ const ProfileTab: React.FC<{ userId: string; userEmail: string }> = ({ userId, u
     const isAdmin = profile?.role === 'admin'
     const fullName = profile?.full_name || userEmail.split('@')[0]
     const initial = fullName.charAt(0).toUpperCase()
+    const { signOut } = useAuth()
 
     return (
         <div className="max-w-3xl mx-auto space-y-8">
@@ -519,10 +520,18 @@ const ProfileTab: React.FC<{ userId: string; userEmail: string }> = ({ userId, u
                 </div>
             </div>
 
-            <div className="p-4 bg-blue-900/10 border border-blue-800/20 rounded-xl text-center">
-                <Link to={`/u/${userId}`} className="text-[#f0c040] text-sm font-bold inline-flex items-center gap-2 hover:underline">
-                    আপনার পাবলিক প্রোফাইল দেখুন <span>→</span>
-                </Link>
+            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                <div className="flex-1 p-4 bg-blue-900/10 border border-blue-800/20 rounded-xl text-center sm:text-left">
+                    <Link to={`/u/${userId}`} className="text-[#f0c040] text-sm font-bold inline-flex items-center gap-2 hover:underline">
+                        আপনার পাবলিক প্রোফাইল দেখুন <span>→</span>
+                    </Link>
+                </div>
+                <button
+                    onClick={signOut}
+                    className="px-6 py-4 bg-red-500/10 border border-red-500/30 text-red-500 rounded-xl text-sm font-bold hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2"
+                >
+                    🚪 লগআউট করুন
+                </button>
             </div>
         </div>
     )
@@ -599,20 +608,6 @@ const DashboardPage: React.FC = () => {
         <>
             <Helmet><title>ড্যাশবোর্ড — Salafiyyah Library BD</title></Helmet>
             <div className="max-w-7xl mx-auto px-4 py-8">
-                {/* Profile Header */}
-                <div className="bg-gradient-to-r from-[#0d1428] to-[#111a33] rounded-2xl border border-blue-800/40 p-6 mb-8 flex flex-col md:flex-row items-center gap-6">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#1a3a8f] to-[#3d6bff] flex items-center justify-center text-3xl text-white font-bold shadow-lg shadow-blue-900/30">
-                        {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || '?'}
-                    </div>
-                    <div className="text-center md:text-left flex-1">
-                        <h1 className="text-xl font-bold text-white">{user.user_metadata?.full_name || 'ব্যবহারকারী'}</h1>
-                        <p className="text-[#8899bb] text-sm">{user.email}</p>
-                    </div>
-                    <button onClick={signOut} className="px-5 py-2 border border-red-500/50 text-red-400 rounded-xl text-sm hover:bg-red-500 hover:text-white transition-all">
-                        🚪 লগআউট
-                    </button>
-                </div>
-
                 {/* Tabs */}
                 <div className="flex gap-2 mb-8 overflow-x-auto scrollbar-hide pb-2">
                     {tabs.map(tab => (
@@ -637,6 +632,15 @@ const DashboardPage: React.FC = () => {
                 {activeTab === 'writers' && <FavWritersTab userId={user.id} />}
                 {activeTab === 'profile' && <ProfileTab userId={user.id} userEmail={user.email || ''} />}
                 {activeTab === 'settings' && <NotifPrefTab userId={user.id} />}
+
+                {/* Simple Logout button for other tabs */}
+                {activeTab !== 'profile' && (
+                    <div className="mt-12 pt-8 border-t border-blue-800/20 text-center">
+                        <button onClick={signOut} className="text-red-400 text-sm hover:underline">
+                            🚪 লগআউট করুন
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     )

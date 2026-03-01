@@ -5,14 +5,14 @@ import { useAuth } from '../contexts/AuthContext'
 import { Navigate } from 'react-router-dom'
 
 // Lazy sub-panels (to keep main bundle light)
-const AdminBooksPanel = lazy(() => import('./admin/AdminBooks.tsx'))
-const AdminWritersPanel = lazy(() => import('./admin/AdminWriters.tsx'))
-const AdminPublishersPanel = lazy(() => import('./admin/AdminPublishers.tsx'))
-const AdminCategoriesPanel = lazy(() => import('./admin/AdminCategories.tsx'))
-const AdminUsersPanel = lazy(() => import('./admin/AdminUsers.tsx'))
-const AdminDuasPanel = lazy(() => import('./admin/AdminDuas.tsx'))
-const AdminAnalyticsPanel = lazy(() => import('./admin/AdminAnalytics.tsx'))
-const AdminCSVImportPanel = lazy(() => import('./admin/AdminCSVImport.tsx'))
+const AdminBooksPanel = lazy(() => import('./admin/AdminBooks'))
+const AdminWritersPanel = lazy(() => import('./admin/AdminWriters'))
+const AdminPublishersPanel = lazy(() => import('./admin/AdminPublishers'))
+const AdminCategoriesPanel = lazy(() => import('./admin/AdminCategories'))
+const AdminUsersPanel = lazy(() => import('./admin/AdminUsers'))
+const AdminDuasPanel = lazy(() => import('./admin/AdminDuas'))
+const AdminAnalyticsPanel = lazy(() => import('./admin/AdminAnalytics'))
+const AdminCSVImportPanel = lazy(() => import('./admin/AdminCSVImport'))
 
 const sidebarItems = [
     { key: 'home', label: '🏠 ড্যাশবোর্ড', icon: '🏠' },

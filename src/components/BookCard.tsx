@@ -84,14 +84,16 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
                 )}
 
                 {/* Compare icon */}
-                <button
-                    onClick={handleCompare}
-                    className={`absolute top-2 left-2 mt-6 w-7 h-7 rounded-full flex items-center justify-center text-sm transition-colors ${isCompareSelected ? 'bg-[#f0c040] text-[#0a0f1e]' : 'bg-black/50 text-white hover:bg-[#f0c040] hover:text-[#0a0f1e]'
-                        }`}
-                    title="তুলনা করুন"
-                >
-                    ⚖️
-                </button>
+                {onCompareToggle && (
+                    <button
+                        onClick={handleCompare}
+                        className={`absolute top-2 left-2 mt-6 w-7 h-7 rounded-full flex items-center justify-center text-sm transition-colors ${isCompareSelected ? 'bg-[#f0c040] text-[#0a0f1e]' : 'bg-black/50 text-white hover:bg-[#f0c040] hover:text-[#0a0f1e]'
+                            }`}
+                        title="তুলনা করুন"
+                    >
+                        ⚖️
+                    </button>
+                )}
 
                 {/* Wishlist icon */}
                 {user && (

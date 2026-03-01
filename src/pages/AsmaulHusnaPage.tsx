@@ -147,7 +147,7 @@ const AsmaulHusnaPage: React.FC = () => {
                             </div>
 
                             {/* Arabic Name */}
-                            <p className="font-arabic text-[28px] text-[#f0c040] mb-4 mt-2" dir="rtl" style={{ fontFamily: 'Amiri, serif' }}>
+                            <p className="font-arabic text-2xl md:text-[28px] text-[#f0c040] mb-4 mt-2" dir="rtl" style={{ fontFamily: 'Amiri, serif' }}>
                                 {name.arabic}
                             </p>
 
