@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase'
 import BookCard from '../components/BookCard'
 import { BookCardSkeleton } from '../components/Skeleton'
 import { useCompare } from '../hooks/useCompare'
+import { trackEvent } from '../lib/analytics'
 
 const SearchPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -13,6 +14,15 @@ const SearchPage: React.FC = () => {
     const [query, setQuery] = useState(q)
     const [categoryFilter, setCategoryFilter] = useState('')
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    // Track search
+    useEffect(() => {
+        if (q.trim()) {
+            trackEvent('search', {
+                search_term: q
+            })
+        }
+    }, [q])
 
     const { data: categories } = useQuery({
         queryKey: ['categories'],

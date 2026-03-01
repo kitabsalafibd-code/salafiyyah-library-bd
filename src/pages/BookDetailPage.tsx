@@ -10,6 +10,7 @@ import ShareButton from '../components/ShareButton'
 import { useCompare } from '../hooks/useCompare'
 import { getFullSizeImage } from '../lib/utils'
 import PlaceholderBook from '../components/PlaceholderBook'
+import { trackEvent } from '../lib/analytics'
 
 const BookDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>()
@@ -45,6 +46,16 @@ const BookDetailPage: React.FC = () => {
         enabled: !!id,
     })
 
+    // Track book view
+    useEffect(() => {
+        if (book) {
+            trackEvent('book_view', {
+                book_title: book.title,
+                category: book.categories?.name
+            })
+        }
+    }, [book])
+
     // Check wishlist status
     useEffect(() => {
         if (user && id) {
@@ -61,8 +72,11 @@ const BookDetailPage: React.FC = () => {
         } else {
             await supabase.from('wishlists').insert({ user_id: user.id, book_id: id })
             setWishlisted(true)
+            trackEvent('add_to_wishlist', {
+                book_title: book?.title
+            })
         }
-    }, [user, id, wishlisted])
+    }, [user, id, wishlisted, book])
 
     // Reviews
     const { data: reviews } = useQuery({
@@ -308,6 +322,7 @@ const BookDetailPage: React.FC = () => {
                                             href={link.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            onClick={() => trackEvent('purchase_click', { store: link.label || link.name, book_title: book.title })}
                                             className={`px-4 py-2 text-white rounded-lg text-sm transition-colors ${getLinkColor(link.label || link.name || '')}`}
                                         >
                                             {link.label || link.name}
