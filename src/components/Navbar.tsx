@@ -44,25 +44,15 @@ export default function Navbar() {
                     fontSize: '16px'
                 }}>
                     📖 Salafiyyah Library BD
-                    <span style={{
-                        background: '#c9a84c',
-                        color: '#0a0f1e',
-                        fontSize: '9px',
-                        fontWeight: 'bold',
-                        padding: '2px 6px',
-                        borderRadius: '999px',
-                        marginLeft: '6px',
-                        verticalAlign: 'middle',
-                        letterSpacing: '0.5px'
-                    }}>
-                        BETA
-                    </span>
                 </Link>
 
-                {/* Desktop links - hidden on mobile */}
+                {/* Center - Nav links */}
                 <div style={{
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
                     display: 'flex',
-                    gap: '16px',
+                    gap: '24px',
                     alignItems: 'center'
                 }} className="desktop-nav">
                     <Link to="/books"
