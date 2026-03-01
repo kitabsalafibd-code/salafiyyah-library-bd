@@ -22,10 +22,9 @@ const moreLinks = [
 
 const Navbar: React.FC = () => {
     const { user, signOut } = useAuth()
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [mobileOpen, setMobileOpen] = useState(false)
+    const [moreOpen, setMoreOpen] = useState(false)
     const [userDropdownOpen, setUserDropdownOpen] = useState(false)
-    const [moreDropdownOpen, setMoreDropdownOpen] = useState(false)
-    const [mobileMoreOpen, setMobileMoreOpen] = useState(false)
     const [hijriDate, setHijriDate] = useState<string>(localStorage.getItem('hijri-date') || '')
     const [logoExists, setLogoExists] = useState(false)
     const userDropdownRef = useRef<HTMLDivElement>(null)
@@ -37,12 +36,20 @@ const Navbar: React.FC = () => {
                 setUserDropdownOpen(false)
             }
             if (moreDropdownRef.current && !moreDropdownRef.current.contains(e.target as Node)) {
-                setMoreDropdownOpen(false)
+                setMoreOpen(false)
             }
         }
         document.addEventListener('mousedown', handleClickOutside)
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
+
+    useEffect(() => {
+        const handleClick = () => {
+            if (mobileOpen) setMobileOpen(false)
+        }
+        document.addEventListener('touchstart', handleClick)
+        return () => document.removeEventListener('touchstart', handleClick)
+    }, [mobileOpen])
 
     // Logo check
     useEffect(() => {
@@ -114,23 +121,23 @@ const Navbar: React.FC = () => {
 
                     <div className="relative" ref={moreDropdownRef}>
                         <button
-                            onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-                            onMouseEnter={() => setMoreDropdownOpen(true)}
+                            onClick={() => setMoreOpen(!moreOpen)}
+                            onMouseEnter={() => setMoreOpen(true)}
                             className="text-sm font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors flex items-center gap-1"
                         >
                             আরও ▾
                         </button>
-                        {moreDropdownOpen && (
+                        {moreOpen && (
                             <div
                                 className="absolute left-0 top-full pt-2 w-56"
-                                onMouseLeave={() => setMoreDropdownOpen(false)}
+                                onMouseLeave={() => setMoreOpen(false)}
                             >
                                 <div className="bg-[#0d1428] border border-blue-800/40 rounded-xl shadow-2xl overflow-hidden py-2">
                                     {moreLinks.map((link) => (
                                         <Link
                                             key={link.to}
                                             to={link.to}
-                                            onClick={() => setMoreDropdownOpen(false)}
+                                            onClick={() => setMoreOpen(false)}
                                             className="block px-4 py-2.5 text-sm text-[#8899bb] hover:text-[#f0c040] hover:bg-[#1a3a8f]/30 transition-colors"
                                         >
                                             {link.label}
@@ -196,90 +203,121 @@ const Navbar: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Mobile menu button */}
+                    {/* Mobile hamburger button */}
                     <button
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden p-2 text-[#8899bb] hover:text-white transition-colors"
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                        className="md:hidden"
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'white',
+                            fontSize: '24px',
+                            cursor: 'pointer',
+                            padding: '8px'
+                        }}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            {mobileMenuOpen ? (
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            )}
-                        </svg>
+                        {mobileOpen ? '✕' : '☰'}
                     </button>
                 </div>
             </div>
 
-            {/* Mobile menu */}
-            {mobileMenuOpen && (
-                <div className="md:hidden bg-[#0a0f1e] border-t border-blue-800/30 fixed inset-x-0 top-[65px] bottom-0 z-40 overflow-y-auto pb-20">
-                    <div className="px-6 py-8 space-y-4">
-                        {mainLinks.map((link) => (
-                            <Link
-                                key={link.to}
-                                to={link.to}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="block text-lg font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+            {/* Mobile menu panel */}
+            <div style={{
+                position: 'fixed',
+                top: '60px',
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: '#0a0f1e',
+                zIndex: 999,
+                padding: '20px',
+                display: mobileOpen ? 'flex' : 'none',
+                flexDirection: 'column',
+                gap: '8px',
+                overflowY: 'auto'
+            }}>
+                <style>
+                    {`
+                    .mobile-nav-link {
+                        display: block;
+                        padding: 14px 16px;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        border-bottom: 1px solid #1a3a8f;
+                        transition: all 0.2s;
+                    }
+                    .mobile-nav-link:hover, .mobile-nav-link:active {
+                        background: #1a3a8f;
+                    }
+                    `}
+                </style>
+                <Link to="/books" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    📚 বই
+                </Link>
+                <Link to="/writers" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    ✍️ লেখক
+                </Link>
+                <Link to="/publishers" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    🏢 প্রকাশনী
+                </Link>
+                <Link to="/ai" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    🤖 AI সহকারী
+                </Link>
 
-                        <div className="space-y-4">
-                            <button
-                                onClick={() => setMobileMoreOpen(!mobileMoreOpen)}
-                                className="w-full flex items-center justify-between text-lg font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
-                            >
-                                <span>আরও</span>
-                                <span>{mobileMoreOpen ? '▴' : '▾'}</span>
-                            </button>
-                            {mobileMoreOpen && (
-                                <div className="pl-4 space-y-4 border-l border-blue-800/20">
-                                    {moreLinks.map((link) => (
-                                        <Link
-                                            key={link.to}
-                                            to={link.to}
-                                            onClick={() => setMobileMenuOpen(false)}
-                                            className="block text-base text-[#8899bb] hover:text-[#f0c040] transition-colors"
-                                        >
-                                            {link.label}
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                <div style={{ borderBottom: '1px solid #1a3a8f66', margin: '8px 0' }} />
 
-                        <Link
-                            to="/ai"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="block text-lg font-medium text-[#8899bb] hover:text-[#f0c040] transition-colors"
-                        >
-                            AI সহকারী
+                <p style={{ color: '#c9a84c', fontSize: '12px', marginTop: '8px', paddingLeft: '16px' }}>
+                    আরও পেজ
+                </p>
+
+                <Link to="/quran" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    📖 আল-কুরআন
+                </Link>
+                <Link to="/hadith" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    📜 হাদীস
+                </Link>
+                <Link to="/salah" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    🕌 সালাতের সময়
+                </Link>
+                <Link to="/dua" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    🤲 দৈনিক দুআ
+                </Link>
+                <Link to="/asmaul-husna" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    ☪️ আসমাউল হুসনা
+                </Link>
+                <Link to="/events" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    🗓️ ইসলামিক ইভেন্ট
+                </Link>
+                <Link to="/top-books" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    🏆 শীর্ষ বই
+                </Link>
+                <Link to="/quiz" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    ❓ ইসলামিক কুইজ
+                </Link>
+                <Link to="/about" onClick={() => setMobileOpen(false)} className="mobile-nav-link">
+                    ℹ️ সম্পর্কে
+                </Link>
+
+                {user ? (
+                    <button
+                        onClick={() => { signOut(); setMobileOpen(false) }}
+                        className="mobile-nav-link text-red-400 w-full text-left"
+                    >
+                        🚪 লগআউট
+                    </button>
+                ) : (
+                    <div className="flex flex-col gap-3 mt-4">
+                        <Link to="/login" onClick={() => setMobileOpen(false)} className="mobile-nav-link text-center border-blue-800">
+                            লগইন
                         </Link>
-
-                        {!user && (
-                            <div className="pt-8 flex flex-col gap-4">
-                                <Link
-                                    to="/login"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="w-full py-3 text-center rounded-xl border border-blue-800/30 text-[#8899bb] hover:text-white transition-colors"
-                                >
-                                    লগইন
-                                </Link>
-                                <Link
-                                    to="/register"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="w-full py-3 text-center rounded-xl bg-[#1a3a8f] hover:bg-[#2952cc] text-white transition-colors"
-                                >
-                                    রেজিস্টার
-                                </Link>
-                            </div>
-                        )}
+                        <Link to="/register" onClick={() => setMobileOpen(false)} className="mobile-nav-link text-center bg-[#1a3a8f] border-none">
+                            রেজিস্টার
+                        </Link>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </header>
     )
 }
