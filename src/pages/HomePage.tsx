@@ -43,7 +43,7 @@ const HeroSection: React.FC = () => {
                     .limit(3)
 
                 const { data: writers } = await supabase
-                    .from('writers')
+                    .from('authors')
                     .select('id, name, avatar_url')
                     .ilike('name', `%${query.trim()}%`)
                     .limit(2)
