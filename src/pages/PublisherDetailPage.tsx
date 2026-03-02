@@ -40,7 +40,7 @@ const PublisherDetailPage: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <div className="flex flex-col md:flex-row items-center gap-6 mb-8 publisher-header">
                     <div className="w-24 h-24 rounded-xl min-w-[96px] min-h-[96px] bg-[#1a3a8f]/30 flex items-center justify-center text-4xl overflow-hidden publisher-logo">
-                        {publisher.logo ? <img src={publisher.logo} alt={publisher.name} className="w-full h-full object-contain" /> : '🏢'}
+                        {publisher.logo ? <img src={publisher.logo} alt={publisher.name} className="w-full h-full object-contain" width="96" height="96" /> : '🏢'}
                     </div>
                     <div className="text-center md:text-left">
                         <h1 className="text-2xl font-bold text-white mb-2 section-title">{publisher.name}</h1>

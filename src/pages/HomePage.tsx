@@ -133,7 +133,7 @@ const HeroSection: React.FC = () => {
                 </div>
 
                 <h1 className="hero-animate-1 text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                    সালাফি জ্ঞানের <span className="text-[#f0c040]">এক ঠিকানা</span>
+                    সালাফিয়্যাহ লাইব্রেরি বিডি — <span className="text-[#f0c040]">ইসলামী বইয়ের ডিজিটাল ভাণ্ডার</span>
                 </h1>
 
                 <p className="hero-animate-2 text-[#8899bb] text-lg md:text-xl mb-10 max-w-2xl mx-auto">
@@ -180,6 +180,8 @@ const HeroSection: React.FC = () => {
                                                     alt={item.title || item.name}
                                                     className="w-full h-full object-cover"
                                                     decoding="async"
+                                                    width="40"
+                                                    height="48"
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-xs opacity-40">📖</div>
@@ -544,7 +546,7 @@ const FeaturedWriters: React.FC = () => {
                     <Link key={w.id} to={`/writers/${w.id}`} className="flex flex-col items-center min-w-[100px] group">
                         <div className="w-16 h-16 rounded-full bg-[#1a3a8f] flex items-center justify-center text-2xl text-white mb-2 border-2 border-blue-800/40 group-hover:border-[#f0c040] transition-colors overflow-hidden">
                             {w.avatar ? (
-                                <img src={w.avatar} alt={w.name} className="w-full h-full object-cover rounded-full" />
+                                <img src={w.avatar} alt={w.name} className="w-full h-full object-cover rounded-full" width="64" height="64" />
                             ) : (
                                 w.name?.charAt(0) || '✍'
                             )}
@@ -799,35 +801,98 @@ const AllBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds }) =
     )
 }
 
-/* ========== Main Homepage ========== */
-const HomePage: React.FC = () => {
-    const { compareIds, toggleCompare } = useCompare()
+/* ========== 13. About Library Content Section (SEO) ========== */
+const AboutLibraryContent: React.FC = () => {
+    const websiteSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Salafiyyah Library BD",
+        "url": "https://salafiyyah-library-bd.netlify.app/",
+        "description": "সালাফিয়্যাহ লাইব্রেরি বিডি — ইসলামী বই, কুরআন, হাদীস ও মনিষীদের জীবনী সম্বলিত এক নির্ভরযোগ্য ডিজিটাল ভাণ্ডার।",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Salafiyyah Library BD",
+            "logo": "https://salafiyyah-library-bd.netlify.app/logo.png"
+        }
+    }
+
     return (
-        <>
+        <section className="max-w-7xl mx-auto px-4 my-20 border-t border-blue-800/20 pt-16">
             <Helmet>
-                <title>Salafiyyah Library BD — সালাফি জ্ঞানের এক ঠিকানা</title>
-                <meta name="description" content="বিশুদ্ধ ইসলামী বই, কুরআন, হাদীস এবং ইসলামী জ্ঞানের সর্ববৃহৎ বাংলা প্ল্যাটফর্ম" />
+                <script type="application/ld+json">
+                    {JSON.stringify(websiteSchema)}
+                </script>
             </Helmet>
-            <HeroSection />
-            <FeaturedBookSection />
-            <SalahTimesWidget />
-            <IslamicQuoteSection />
-            <NewArrivals onCompareToggle={toggleCompare} compareIds={compareIds} />
-            {/* Featured */}
-            <FeaturedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
-            <HadithOfTheDay />
-            <AyahOfTheDay />
-            <CategoriesGrid />
-            <FeaturedWriters />
-            <IslamicEventCountdown />
-            <DailyDua />
-            {/* Top Wishlisted */}
-            <TopWishlistedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
-            {/* Recently Viewed */}
-            <RecentlyViewedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
-            {/* All Books */}
-            <AllBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
-        </>
+
+            <div className="grid md:grid-cols-12 gap-12">
+                <div className="md:col-span-8 space-y-8 text-[#b8c5e0] leading-relaxed">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 border-l-4 border-[#f0c040] pl-6">
+                        সালাফিয়্যাহ লাইব্রেরি বিডি — বিশুদ্ধ ইসলামী জ্ঞানের ডিজিটাল ভাণ্ডার
+                    </h2>
+
+                    <div className="space-y-6">
+                        <p>
+                            ইসলামী বিশ্বের বিশাল জ্ঞানভাণ্ডারকে আধুনিক প্রযুক্তির মাধ্যমে মানুষের দোরগোড়ায় পৌঁছে দেওয়ার প্রত্যয় নিয়ে যাত্রা শুরু করেছে <strong>সালাফিয়্যাহ লাইব্রেরি বিডি</strong>। কুরআন এবং সুন্নাহর সঠিক বুঝ, যা সালাফে সালেহীনদের মানহাজ অনুযায়ী পরিচালিত, তা প্রচার ও প্রসারে আমরা নিরলস কাজ করে যাচ্ছি। আমাদের এই অনলাইন প্ল্যাটফর্মে আপনি পাবেন শত শত বিশুদ্ধ ইসলামী বই, যা আপনার ঈমান ও আমলকে সমৃদ্ধ করবে।
+                        </p>
+
+                        <h3 className="text-2xl font-bold text-[#f0c040] mt-8">আমাদের লক্ষ্য ও উদ্দেশ্য</h3>
+                        <p>
+                            আমাদের প্রধান লক্ষ্য হলো বাংলাভাষী মুসলিমদের কাছে আহলুস সুন্নাহ ওয়াল জামাআতের আলেমদের রচিত বিশুদ্ধ বইগুলো অনলাইনে সহজে পড়ার সুযোগ করে দেওয়া। বর্তমানে ইন্টারনেটের যুগে বিভ্রান্তিকর তথ্যের ভিড়ে সঠিক ইলম খুঁজে পাওয়া বেশ কঠিন। তাই আমরা যাচাই-বাছাই করে শুধুমাত্র নির্ভরযোগ্য প্রকাশনী এবং আলেমদের বইগুলোই আমাদের লাইব্রেরিতে যুক্ত করি।
+                        </p>
+
+                        <h3 className="text-2xl font-bold text-[#f0c040] mt-8">আমাদের সংগ্রহের বৈশিষ্ট্য</h3>
+                        <p>
+                            আমাদের লাইব্রেরিতে আকীদা, তাফসীর, হাদীস, ফিকহ, সীরাত এবং মুসলিম ইতিহাসসহ নানা বিষয়ের বই রয়েছে। বিশেষ করে শায়খুল ইসলাম ইবনে তাইমিয়্যাহ, ইমাম ইবনুল কাইয়্যুম, শায়খ নাসিরুদ্দিন আলবানী, শায়খ ইবনে উসাইমীন এবং শায়খ বিন বায (রাহিমাহুমুল্লাহ)-সহ বর্তমান সময়ের নির্ভরযোগ্য আলেমদের গুরুত্বপূর্ণ কিতাবগুলো এখানে সংরক্ষিত আছে।
+                        </p>
+                        <p>
+                            প্রতিটি বইয়ের জন্য আমাদের রয়েছে উন্নত রিডার এবং সার্চ অপশন, যার মাধ্যমে আপনি খুব সহজেই আপনার কাঙ্ক্ষিত বিষয়টি খুঁজে পেতে পারেন। এছাড়া বইয়ের পাশাপাশি আমরা দৈনন্দিন দুআ, সালাতের সময় এবং আল-কুরআনের ডিজিটাল সেবাও প্রদান করছি।
+                        </p>
+
+                        <h3 className="text-2xl font-bold text-[#f0c040] mt-8">কেন সালাফিয়্যাহ লাইব্রেরি বিডি ব্যবহার করবেন?</h3>
+                        <ul className="list-disc pl-6 space-y-3">
+                            <li><strong>বিশুদ্ধতা:</strong> আমরা প্রতিটি কিতাব সালাফি মানহাজের মানদণ্ডে যাচাই করি।</li>
+                            <li><strong>ব্যবহারকারী বান্ধব:</strong> আমাদের ইন্টারফেস অত্যন্ত সহজ এবং মোবাইল ফ্রেন্ডলি।</li>
+                            <li><strong>বিনামূল্যে অ্যাক্সেস:</strong> দ্বীনি ইলম প্রসারে আমরা বেশিরভাগ সেবা বিনামূল্যে প্রদান করি।</li>
+                            <li><strong>নিয়মিত আপডেট:</strong> আমরা প্রতিনিয়ত নতুন নতুন বই এবং ফিচার যুক্ত করছি।</li>
+                        </ul>
+
+                        <h3 className="text-2xl font-bold text-[#f0c040] mt-8">বিশিষ্ট আলেম ও লেখকগণ</h3>
+                        <p>
+                            সালাফিয়্যাহ লাইব্রেরি বিডিতে আপনি পাবেন বিশ্ববিখ্যাত আলেমদের পাশাপাশি দেশীয় বিজ্ঞ আলেমদের মূল্যবান সব অনুবাদ ও মৌলিক গ্রন্থ। আমাদের লেখক তালিকার শীর্ষে রয়েছেন ইমাম বুখারী, ইমাম মুসলিম, শায়খ আলবানী এবং আরও অনেকে। তাদের রচিত কিতাবগুলো মুসলিম উম্মাহর জন্য এক অমূল্য সম্পদ।
+                        </p>
+
+                        <h3 className="text-2xl font-bold text-[#f0c040] mt-8">বইয়ের বিভাগ ও সহজ অনুসন্ধান</h3>
+                        <p>
+                            আপনার সুবিধার্থে আমরা বইগুলোকে বিভিন্ন ক্যাটাগরিতে ভাগ করেছি। যেমন: তাওহীদ ও আকীদা, সালাত ও ইবাদত, রমাদান ও রোজা, হজ্জ ও উমরাহ, এবং মুসলিম নারীদের জন্য বিশেষ মাসায়েল। আপনি আমাদের সার্চ বক্স ব্যবহার করে ক্যাটাগরি, লেখক বা প্রকাশনীর নাম দিয়ে সহজেই সার্চ করতে পারেন।
+                        </p>
+
+                        <p className="border-t border-blue-800/20 pt-6 italic">
+                            সঠিক জ্ঞানই পারে একজন মুমিনকে অন্ধকার থেকে আলোর পথে নিয়ে আসতে। সালাফিয়্যাহ লাইব্রেরি বিডির সাথে যুক্ত থেকে আপনার ইসলামী জ্ঞানের পরিধি আরও বৃদ্ধি করুন। জাযাকাল্লাহু খাইরান।
+                        </p>
+                    </div>
+                </div>
+
+                <div className="md:col-span-4">
+                    <div className="sticky top-24 space-y-6">
+                        <div className="bg-[#0d1428] rounded-2xl border border-blue-800/40 p-6 shadow-xl">
+                            <h4 className="text-xl font-bold text-white mb-4">দ্রুত সংযোগ</h4>
+                            <div className="grid grid-cols-1 gap-3">
+                                <Link to="/books" className="tap-target px-4 py-2 bg-blue-900/20 hover:bg-blue-900/40 rounded-lg text-sm transition-all">সব বই দেখুন</Link>
+                                <Link to="/writers" className="tap-target px-4 py-2 bg-blue-900/20 hover:bg-blue-900/40 rounded-lg text-sm transition-all">আলেম ও লেখকগণ</Link>
+                                <Link to="/quran" className="tap-target px-4 py-2 bg-blue-900/20 hover:bg-blue-900/40 rounded-lg text-sm transition-all">আল-কুরআন</Link>
+                                <Link to="/hadith" className="tap-target px-4 py-2 bg-blue-900/20 hover:bg-blue-900/40 rounded-lg text-sm transition-all">হাদীস সম্ভার</Link>
+                            </div>
+                        </div>
+
+                        <div className="bg-gradient-to-br from-[#1a1500] to-[#0d1428] rounded-2xl border border-[#c9a84c]/30 p-6 shadow-xl">
+                            <h4 className="text-xl font-bold text-[#f0c040] mb-2">প্রতিদিনের ইলম</h4>
+                            <p className="text-sm text-[#8899bb] mb-4">সঠিক উৎস থেকে দ্বীন শিখুন এবং অন্যদের সাথে শেয়ার করুন।</p>
+                            <button className="w-full py-3 bg-[#c9a84c] text-[#0a0f1e] rounded-xl font-bold hover:bg-[#f0c040] transition-all">সাবস্ক্রাইব করুন</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     )
 }
 
@@ -862,6 +927,8 @@ const FeaturedBookSection: React.FC = () => {
                             alt={book.title}
                             className="relative w-full max-w-[280px] mx-auto rounded-2xl shadow-2xl transform transition-transform group-hover:scale-[1.02] border border-blue-800/20"
                             decoding="async"
+                            width="280"
+                            height="400"
                         />
                     ) : (
                         <PlaceholderBook className="max-w-[280px] mx-auto" />
@@ -923,6 +990,51 @@ const IslamicQuoteSection: React.FC = () => {
                 </div>
             </div>
         </section>
+    )
+}
+
+/* ========== 14. Main HomePage Component ========== */
+const HomePage: React.FC = () => {
+    const { compareIds, toggleCompare } = useCompare()
+
+    return (
+        <div className="bg-[#0a0f1e] min-h-screen">
+            <Helmet>
+                <title>সালাফিয়্যাহ লাইব্রেরি বিডি — ইসলামী বই ও জ্ঞানের ডিজিটাল ভাণ্ডার</title>
+                <meta name="description" content="সালাফিয়্যাহ লাইব্রেরি বিডি — ইসলামী বই, কুরআন, হাদীস ও মনিষীদের জীবনী সম্বলিত এক নির্ভরযোগ্য ডিজিটাল ভাণ্ডার।" />
+                <link rel="canonical" href="https://salafiyyah-library-bd.netlify.app/" />
+            </Helmet>
+
+            <HeroSection />
+
+            <div className="space-y-4">
+                <FeaturedBookSection />
+                <SalahTimesWidget />
+                <IslamicQuoteSection />
+                <NewArrivals onCompareToggle={toggleCompare} compareIds={compareIds} />
+                <FeaturedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+
+                <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 my-12">
+                    <HadithOfTheDay />
+                    <AyahOfTheDay />
+                </div>
+
+                <CategoriesGrid />
+                <FeaturedWriters />
+
+                <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 my-12">
+                    <IslamicEventCountdown />
+                    <DailyDua />
+                </div>
+
+                <TopWishlistedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+                <RecentlyViewedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+                <AllBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+
+                {/* SEO Content Section */}
+                <AboutLibraryContent />
+            </div>
+        </div>
     )
 }
 

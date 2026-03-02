@@ -11,24 +11,19 @@ interface Message {
 const EDGE_FUNCTION_URL = 'https://ermxrcaqkblsaespedvs.supabase.co/functions/v1/groq-chat'
 
 const MessageComponent: React.FC<{ msg: Message; isLatest: boolean }> = ({ msg, isLatest }) => {
-    const isAssistant = msg.role === 'assistant'
-    const initialIndex = isLatest && isAssistant ? 0 : msg.content.length
-    const indexRef = useRef(initialIndex)
-    const [displayedContent, setDisplayedContent] = useState(msg.content.slice(0, initialIndex))
+    const [displayedContent, setDisplayedContent] = useState(isLatest && msg.role === 'assistant' ? '' : msg.content)
+    const [typing, setTyping] = useState(isLatest && msg.role === 'assistant')
 
     useEffect(() => {
-        if (!isLatest || !isAssistant || indexRef.current >= msg.content.length) {
-            return
+        if (isLatest && msg.role === 'assistant' && displayedContent.length < msg.content.length) {
+            const timeout = setTimeout(() => {
+                setDisplayedContent(msg.content.slice(0, displayedContent.length + 1))
+            }, 10) // Speed of typing
+            return () => clearTimeout(timeout)
+        } else {
+            setTyping(false)
         }
-
-        const timeout = setTimeout(() => {
-            indexRef.current += 1
-            setDisplayedContent(msg.content.slice(0, indexRef.current))
-        }, 10) // Speed of typing
-        return () => clearTimeout(timeout)
-    }, [isLatest, isAssistant, msg.content, displayedContent])
-
-    const isTyping = isLatest && isAssistant && displayedContent.length < msg.content.length
+    }, [msg.content, displayedContent, isLatest, msg.role])
 
     return (
         <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${msg.role === 'user'
@@ -38,7 +33,7 @@ const MessageComponent: React.FC<{ msg: Message; isLatest: boolean }> = ({ msg, 
             {msg.role === 'assistant' ? (
                 <div className="prose prose-sm prose-invert max-w-none [&_p]:text-white [&_p]:leading-relaxed [&_p]:mb-2 [&_strong]:text-[#f0c040] [&_em]:text-[#c9a84c] [&_code]:text-[#3d6bff] [&_code]:bg-[#111a33] [&_code]:px-1 [&_code]:rounded [&_ul]:text-[#8899bb] [&_ol]:text-[#8899bb] [&_li]:mb-1 [&_a]:text-[#3d6bff]">
                     <ReactMarkdown>{displayedContent}</ReactMarkdown>
-                    {isTyping && (
+                    {typing && (
                         <motion.span
                             animate={{ opacity: [0, 1, 0] }}
                             transition={{ repeat: Infinity, duration: 0.8 }}
@@ -99,8 +94,8 @@ const AIChatPage: React.FC = () => {
             const aiResponse = data.output || data.response || data.message || 'দুঃখিত, উত্তর পাওয়া যায়নি।'
 
             setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }])
-        } catch (err: unknown) {
-            const errorMsg = err instanceof Error && err.name === 'AbortError'
+        } catch (err: any) {
+            const errorMsg = err.name === 'AbortError'
                 ? 'সার্ভার সাড়া দিচ্ছে না। একটু পরে চেষ্টা করুন।'
                 : 'দুঃখিত, সমস্যা হয়েছে। আবার চেষ্টা করুন।'
             setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }])

@@ -212,6 +212,8 @@ const BookDetailPage: React.FC = () => {
                                 className="w-full h-full object-cover"
                                 decoding="async"
                                 loading="lazy"
+                                width="350"
+                                height="466"
                             />
                         ) : (
                             <PlaceholderBook />

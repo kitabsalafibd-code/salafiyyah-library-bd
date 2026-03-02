@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://salafiyyah-library-bd.netlify.app/sitemap.xml

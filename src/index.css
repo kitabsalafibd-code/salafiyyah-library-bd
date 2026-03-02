@@ -26,6 +26,7 @@
 
 body {
   font-family: var(--font-bangla);
+  font-size: 16px;
   background-color: var(--color-navy);
   color: #ffffff;
   min-height: 100vh;
@@ -217,8 +218,14 @@ img {
     padding: 6px 4px !important;
   }
 
-  button {
-    min-height: 44px !important;
+  button,
+  a.btn,
+  .tap-target {
+    min-height: 48px !important;
+    min-width: 48px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .card {

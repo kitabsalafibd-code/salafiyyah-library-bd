@@ -71,6 +71,8 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
                         onLoad={() => setImageLoaded(true)}
                         onError={() => setImgError(true)}
                         className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        width="300"
+                        height="400"
                     />
                 ) : (
                     <PlaceholderBook />
@@ -87,7 +89,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
                 {onCompareToggle && (
                     <button
                         onClick={handleCompare}
-                        className={`absolute top-2 left-2 mt-6 w-7 h-7 rounded-full flex items-center justify-center text-sm transition-colors ${isCompareSelected ? 'bg-[#f0c040] text-[#0a0f1e]' : 'bg-black/50 text-white hover:bg-[#f0c040] hover:text-[#0a0f1e]'
+                        className={`absolute top-2 left-2 mt-6 w-12 h-12 md:w-7 md:h-7 rounded-full flex items-center justify-center text-sm transition-colors ${isCompareSelected ? 'bg-[#f0c040] text-[#0a0f1e]' : 'bg-black/50 text-white hover:bg-[#f0c040] hover:text-[#0a0f1e]'
                             }`}
                         title="তুলনা করুন"
                     >
@@ -100,7 +102,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, onCompareToggle, isCompareSel
                     <div className="absolute top-2 right-2 flex flex-col gap-2">
                         <button
                             onClick={toggleWishlist}
-                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${wishlisted ? 'bg-red-500 text-white' : 'bg-black/50 text-white hover:bg-red-500'
+                            className={`w-12 h-12 md:w-8 md:h-8 rounded-full flex items-center justify-center transition-colors ${wishlisted ? 'bg-red-500 text-white' : 'bg-black/50 text-white hover:bg-red-500'
                                 }`}
                             title="উইশলিস্ট"
                         >

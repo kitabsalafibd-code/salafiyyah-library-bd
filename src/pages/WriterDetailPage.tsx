@@ -61,7 +61,7 @@ const WriterDetailPage: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 py-8 container page-content" style={{ overflowX: 'hidden' }}>
                 <div className="flex flex-col md:flex-row items-center gap-6 mb-8 writer-header">
                     <div className="w-32 h-32 rounded-full min-w-[128px] min-h-[128px] bg-[#1a3a8f] flex items-center justify-center text-5xl text-white border-4 border-blue-800/40 overflow-hidden writer-avatar">
-                        {writer.avatar ? <img src={writer.avatar} alt={writer.name} className="w-full h-full object-cover" /> : writer.name?.charAt(0)}
+                        {writer.avatar ? <img src={writer.avatar} alt={writer.name} className="w-full h-full object-cover" width="128" height="128" /> : writer.name?.charAt(0)}
                     </div>
                     <div className="text-center md:text-left">
                         <h1 className="text-2xl font-bold text-white mb-2 section-title">{writer.name}</h1>
