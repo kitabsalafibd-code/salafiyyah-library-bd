@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Navbar() {
     const [open, setOpen] = useState(false)
@@ -55,18 +56,24 @@ export default function Navbar() {
                     gap: '24px',
                     alignItems: 'center'
                 }} className="desktop-nav">
-                    <Link to="/books"
-                        style={{ color: 'white', textDecoration: 'none', fontSize: '14px' }}
-                        className="nav-link">বই</Link>
-                    <Link to="/writers"
-                        style={{ color: 'white', textDecoration: 'none', fontSize: '14px' }}
-                        className="nav-link">লেখক</Link>
-                    <Link to="/publishers"
-                        style={{ color: 'white', textDecoration: 'none', fontSize: '14px' }}
-                        className="nav-link">প্রকাশনী</Link>
-                    <Link to="/ai"
-                        style={{ color: 'white', textDecoration: 'none', fontSize: '14px' }}
-                        className="nav-link">AI সহকারী</Link>
+                    {['books', 'writers', 'publishers', 'ai'].map((path) => (
+                        <motion.div
+                            key={path}
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <Link
+                                to={`/${path}`}
+                                style={{ color: 'white', textDecoration: 'none', fontSize: '14px' }}
+                                className="nav-link"
+                            >
+                                {path === 'books' && 'বই'}
+                                {path === 'writers' && 'লেখক'}
+                                {path === 'publishers' && 'প্রকাশনী'}
+                                {path === 'ai' && 'AI সহকারী'}
+                            </Link>
+                        </motion.div>
+                    ))}
                 </div>
 
                 {/* Right side icons */}
@@ -100,36 +107,44 @@ export default function Navbar() {
             </nav>
 
             {/* Mobile dropdown menu */}
-            {open && (
-                <div style={{
-                    position: 'fixed',
-                    top: '60px',
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: '#0a0f1e',
-                    zIndex: 999,
-                    overflowY: 'auto',
-                    padding: '16px'
-                }}>
-                    {links.map(link => (
-                        <Link
-                            key={link.to}
-                            to={link.to}
-                            onClick={() => setOpen(false)}
-                            style={{
-                                display: 'block',
-                                padding: '16px',
-                                color: 'white',
-                                textDecoration: 'none',
-                                borderBottom: '1px solid #1a3a8f',
-                                fontSize: '16px'
-                            }}>
-                            {link.label}
-                        </Link>
-                    ))}
-                </div>
-            )}
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                        style={{
+                            position: 'fixed',
+                            top: '60px',
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: '#0a0f1e',
+                            zIndex: 999,
+                            overflowY: 'auto',
+                            padding: '16px'
+                        }}
+                    >
+                        {links.map(link => (
+                            <Link
+                                key={link.to}
+                                to={link.to}
+                                onClick={() => setOpen(false)}
+                                style={{
+                                    display: 'block',
+                                    padding: '16px',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    borderBottom: '1px solid #1a3a8f',
+                                    fontSize: '16px'
+                                }}>
+                                {link.label}
+                            </Link>
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Spacer for fixed navbar */}
             <div style={{ height: '60px' }} />

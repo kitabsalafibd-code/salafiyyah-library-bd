@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Helmet } from 'react-helmet-async'
 import ReactMarkdown from 'react-markdown'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface Message {
     role: 'user' | 'assistant'
@@ -8,6 +9,44 @@ interface Message {
 }
 
 const EDGE_FUNCTION_URL = 'https://ermxrcaqkblsaespedvs.supabase.co/functions/v1/groq-chat'
+
+const MessageComponent: React.FC<{ msg: Message; isLatest: boolean }> = ({ msg, isLatest }) => {
+    const [displayedContent, setDisplayedContent] = useState(isLatest && msg.role === 'assistant' ? '' : msg.content)
+    const [typing, setTyping] = useState(isLatest && msg.role === 'assistant')
+
+    useEffect(() => {
+        if (isLatest && msg.role === 'assistant' && displayedContent.length < msg.content.length) {
+            const timeout = setTimeout(() => {
+                setDisplayedContent(msg.content.slice(0, displayedContent.length + 1))
+            }, 10) // Speed of typing
+            return () => clearTimeout(timeout)
+        } else {
+            setTyping(false)
+        }
+    }, [msg.content, displayedContent, isLatest, msg.role])
+
+    return (
+        <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${msg.role === 'user'
+            ? 'bg-gradient-to-r from-[#c9a84c] to-[#f0c040] text-[#0a0f1e]'
+            : 'bg-[#0d1428] border border-blue-800/40 text-white'
+            }`}>
+            {msg.role === 'assistant' ? (
+                <div className="prose prose-sm prose-invert max-w-none [&_p]:text-white [&_p]:leading-relaxed [&_p]:mb-2 [&_strong]:text-[#f0c040] [&_em]:text-[#c9a84c] [&_code]:text-[#3d6bff] [&_code]:bg-[#111a33] [&_code]:px-1 [&_code]:rounded [&_ul]:text-[#8899bb] [&_ol]:text-[#8899bb] [&_li]:mb-1 [&_a]:text-[#3d6bff]">
+                    <ReactMarkdown>{displayedContent}</ReactMarkdown>
+                    {typing && (
+                        <motion.span
+                            animate={{ opacity: [0, 1, 0] }}
+                            transition={{ repeat: Infinity, duration: 0.8 }}
+                            className="inline-block w-1.5 h-4 ml-1 bg-[#f0c040]"
+                        />
+                    )}
+                </div>
+            ) : (
+                <p className="text-sm leading-relaxed font-semibold">{msg.content}</p>
+            )}
+        </div>
+    )
+}
 
 const AIChatPage: React.FC = () => {
     useEffect(() => {
@@ -84,24 +123,25 @@ const AIChatPage: React.FC = () => {
 
                 {/* Chat messages */}
                 <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2 scrollbar-hide message-list">
-                    {messages.map((msg, i) => (
-                        <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${msg.role === 'user'
-                                ? 'bg-gradient-to-r from-[#c9a84c] to-[#f0c040] text-[#0a0f1e]'
-                                : 'bg-[#0d1428] border border-blue-800/40 text-white'
-                                }`}>
-                                {msg.role === 'assistant' ? (
-                                    <div className="prose prose-sm prose-invert max-w-none [&_p]:text-white [&_p]:leading-relaxed [&_p]:mb-2 [&_strong]:text-[#f0c040] [&_em]:text-[#c9a84c] [&_code]:text-[#3d6bff] [&_code]:bg-[#111a33] [&_code]:px-1 [&_code]:rounded [&_ul]:text-[#8899bb] [&_ol]:text-[#8899bb] [&_li]:mb-1 [&_a]:text-[#3d6bff]">
-                                        <ReactMarkdown>{msg.content}</ReactMarkdown>
-                                    </div>
-                                ) : (
-                                    <p className="text-sm leading-relaxed font-semibold">{msg.content}</p>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                    <AnimatePresence initial={false}>
+                        {messages.map((msg, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ duration: 0.2 }}
+                                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                            >
+                                <MessageComponent msg={msg} isLatest={i === messages.length - 1} />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                     {loading && (
-                        <div className="flex justify-start">
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex justify-start"
+                        >
                             <div className="bg-[#0d1428] border border-blue-800/40 rounded-2xl px-5 py-4">
                                 <div className="flex gap-1.5">
                                     <span className="w-2.5 h-2.5 bg-[#f0c040] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -109,7 +149,7 @@ const AIChatPage: React.FC = () => {
                                     <span className="w-2.5 h-2.5 bg-[#f0c040] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     )}
                     <div ref={chatEndRef} />
                 </div>
