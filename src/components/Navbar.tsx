@@ -39,12 +39,14 @@ export default function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    textDecoration: 'none',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    fontSize: '16px'
+                    textDecoration: 'none'
                 }}>
-                    📖 Salafiyyah Library BD
+                    <img
+                        src="/logo.png"
+                        alt="Salafiyyah Library BD"
+                        style={{ height: '40px', width: 'auto' }}
+                        onError={(e) => { e.currentTarget.style.display = 'none' }}
+                    />
                 </Link>
 
                 {/* Center - Nav links */}
