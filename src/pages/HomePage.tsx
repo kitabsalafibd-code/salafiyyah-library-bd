@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
@@ -9,7 +10,50 @@ import { useCompare } from '../hooks/useCompare'
 import { getFullSizeImage } from '../lib/utils'
 import PlaceholderBook from '../components/PlaceholderBook'
 
-/* ========== Helper: date-seeded random ========== */
+/* ========== Helper: Stat Counter ========== */
+const StatCounter: React.FC<{ end: number; suffix?: string }> = ({ end, suffix = "" }) => {
+    const [count, setCount] = useState(0)
+    const ref = useRef(null)
+    const inView = useInView(ref, { once: true, amount: 0.5 })
+
+    useEffect(() => {
+        if (inView) {
+            let start = 0
+            const duration = 2000
+            const increment = end / (duration / 16)
+            const timer = setInterval(() => {
+                start += increment
+                if (start >= end) {
+                    setCount(end)
+                    clearInterval(timer)
+                } else {
+                    setCount(Math.floor(start))
+                }
+            }, 16)
+            return () => clearInterval(timer)
+        }
+    }, [inView, end])
+
+    return <span ref={ref}>{count}{suffix}</span>
+}
+
+/* ========== Helper: Animated Section ========== */
+const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {
+    const ref = useRef(null)
+    const inView = useInView(ref, { once: true, amount: 0.2 })
+
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className={className}
+        >
+            {children}
+        </motion.div>
+    )
+}
 function seededRandom(seed: number) {
     const x = Math.sin(seed) * 10000
     return x - Math.floor(x)
@@ -21,11 +65,14 @@ function getTodaySeed() {
 
 /* ========== 1. Hero Section ========== */
 const HeroSection: React.FC = () => {
-    console.log('Hero rendering')
     const navigate = useNavigate()
     const [query, setQuery] = useState('')
     const [suggestions, setSuggestions] = useState<any[]>([])
     const [showSuggestions, setShowSuggestions] = useState(false)
+
+    const { scrollY } = useScroll()
+    const y1 = useTransform(scrollY, [0, 500], [0, 200])
+    const y2 = useTransform(scrollY, [0, 500], [0, -150])
 
     const handleSearch = useCallback(() => {
         if (query.trim()) navigate(`/search?q=${encodeURIComponent(query.trim())}`)
@@ -77,17 +124,21 @@ const HeroSection: React.FC = () => {
             <div className="absolute inset-0 bg-[linear-gradient(135deg,#0a0f1e_0%,#0d1f4a_40%,#0a1535_70%,#0a0f1e_100%)]" />
 
             {/* Layer 2: Islamic Pattern */}
-            <div
+            <motion.div
                 className="absolute inset-0 opacity-[0.07]"
                 style={{
                     backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><polygon points="45,5 75,5 115,45 115,75 75,115 45,115 5,75 5,45" fill="none" stroke="%23c9a84c" stroke-width="0.8"/><polygon points="60,15 65,45 95,45 72,63 80,93 60,75 40,93 48,63 25,45 55,45" fill="none" stroke="%23c9a84c" stroke-width="0.6"/><polygon points="60,40 75,60 60,80 45,60" fill="none" stroke="%23c9a84c" stroke-width="0.5"/><circle cx="60" cy="5" r="2" fill="%23c9a84c" opacity="0.4"/><circle cx="115" cy="60" r="2" fill="%23c9a84c" opacity="0.4"/><circle cx="60" cy="115" r="2" fill="%23c9a84c" opacity="0.4"/><circle cx="5" cy="60" r="2" fill="%23c9a84c" opacity="0.4"/></svg>')`,
                     backgroundRepeat: 'repeat',
-                    backgroundSize: '120px'
+                    backgroundSize: '120px',
+                    y: y1
                 }}
             />
 
             {/* Layer 3: Radial Gold Glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,rgba(41,82,204,0.15)_0%,transparent_70%)]" />
+            <motion.div
+                className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,rgba(41,82,204,0.15)_0%,transparent_70%)]"
+                style={{ y: y2 }}
+            />
 
             {/* Layer 4: Bottom Fade */}
             <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_70%,#0a0f1e_100%)]" />
@@ -148,7 +199,7 @@ const HeroSection: React.FC = () => {
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                         onFocus={() => query.length > 1 && setShowSuggestions(true)}
                         placeholder="বই, লেখক বা প্রকাশনী খুঁজুন..."
-                        className="flex-1 px-6 py-4 bg-[#0d1428]/80 backdrop-blur-sm text-white placeholder-[#8899bb] focus:outline-none w-full"
+                        className="flex-1 px-6 py-4 bg-[#0d1428]/80 backdrop-blur-sm text-white placeholder-[#8899bb] focus:outline-none w-full transition-all duration-300 focus:shadow-[0_0_20px_rgba(201,168,76,0.4)]"
                     />
                     <button
                         onClick={handleSearch}
@@ -209,13 +260,13 @@ const HeroSection: React.FC = () => {
                 {/* Stat Badges */}
                 <div className="hero-animate-4 flex flex-wrap items-center justify-center gap-4 text-sm font-medium hero-stats">
                     <div className="px-5 py-2 rounded-full border border-[#c9a84c]/20 bg-[#0d1428]/50 backdrop-blur-sm text-[#c9a84c] flex items-center gap-2">
-                        <span className="text-lg">📚</span> ৫০০+ বই
+                        <span className="text-lg">📚</span> <StatCounter end={500} suffix="+" /> বই
                     </div>
                     <div className="px-5 py-2 rounded-full border border-[#c9a84c]/20 bg-[#0d1428]/50 backdrop-blur-sm text-[#c9a84c] flex items-center gap-2">
-                        <span className="text-lg">✍️</span> ১০০+ লেখক
+                        <span className="text-lg">✍️</span> <StatCounter end={100} suffix="+" /> লেখক
                     </div>
                     <div className="px-5 py-2 rounded-full border border-[#c9a84c]/20 bg-[#0d1428]/50 backdrop-blur-sm text-[#c9a84c] flex items-center gap-2">
-                        <span className="text-lg">🏢</span> ৫০+ প্রকাশনী
+                        <span className="text-lg">🏢</span> <StatCounter end={50} suffix="+" /> প্রকাশনী
                     </div>
                 </div>
             </div>
@@ -277,7 +328,7 @@ const SalahTimesWidget: React.FC = () => {
     )
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-10" style={{ overflowX: 'hidden' }}>
+        <AnimatedSection className="max-w-7xl mx-auto px-4 my-10">
             <h2 className="text-xl font-bold text-white mb-4 section-title">🕌 সালাতের সময়</h2>
             <div className="grid grid-cols-5 gap-3 salah-grid">
                 {Object.entries(salahNames).map(([key, name]) => (
@@ -300,7 +351,7 @@ const SalahTimesWidget: React.FC = () => {
                     </div>
                 ))}
             </div>
-        </section>
+        </AnimatedSection>
     )
 }
 
@@ -319,7 +370,7 @@ const NewArrivals: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds }
     })
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+        <AnimatedSection className="max-w-7xl mx-auto px-4 my-12">
             <h2 className="text-xl font-bold text-white mb-4 section-title">🆕 নতুন আসা বই</h2>
             <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 books-grid-scroll">
                 {isLoading
@@ -337,7 +388,7 @@ const NewArrivals: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds }
                     ))
                 }
             </div>
-        </section>
+        </AnimatedSection>
     )
 }
 
@@ -361,7 +412,7 @@ const FeaturedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds
     })
 
     return (
-        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
+        <AnimatedSection className="max-w-7xl mx-auto px-4 my-12">
             <h2 className="text-xl font-bold text-white mb-4 section-title">⭐ ফিচার্ড বই</h2>
             <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 books-grid-scroll">
                 {isLoading
@@ -379,7 +430,7 @@ const FeaturedBooks: React.FC<BookSectionProps> = ({ onCompareToggle, compareIds
                     ))
                 }
             </div>
-        </section>
+        </AnimatedSection>
     )
 }
 
@@ -778,7 +829,7 @@ const FeaturedBookSection: React.FC = () => {
     if (isLoading || !book) return null
 
     return (
-        <section className="max-w-7xl mx-auto px-4 py-8 md:py-16">
+        <AnimatedSection className="max-w-7xl mx-auto px-4 py-8 md:py-16">
             <div className="bg-gradient-to-r from-[#1a3a8f]/40 to-[#0a0f1e] rounded-3xl border border-blue-800/40 p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row gap-12 items-center">
                 <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none hidden md:block">
                     <span className="text-[200px] leading-none">📖</span>
@@ -825,7 +876,7 @@ const FeaturedBookSection: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </section>
+        </AnimatedSection>
     )
 }
 
@@ -841,7 +892,7 @@ const IslamicQuoteSection: React.FC = () => {
     const quote = quotes[dayOfYear % quotes.length]
 
     return (
-        <section className="bg-gradient-to-b from-transparent to-[#111a33]/30 py-16">
+        <AnimatedSection className="bg-gradient-to-b from-transparent to-[#111a33]/30 py-16">
             <div className="max-w-4xl mx-auto px-4 text-center">
                 <div className="text-4xl md:text-5xl text-[#f0c040]/20 mb-8 font-serif leading-none italic">"</div>
                 <h2 className="text-xl md:text-3xl font-medium text-white/90 leading-relaxed mb-8 italic">
@@ -853,7 +904,7 @@ const IslamicQuoteSection: React.FC = () => {
                     <div className="h-px w-8 bg-blue-800/40" />
                 </div>
             </div>
-        </section>
+        </AnimatedSection>
     )
 }
 
@@ -878,21 +929,31 @@ const HomePage: React.FC = () => {
                 <NewArrivals onCompareToggle={toggleCompare} compareIds={compareIds} />
                 <FeaturedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
 
-                <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 my-12">
+                <AnimatedSection className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 my-12">
                     <HadithOfTheDay />
                     <AyahOfTheDay />
-                </div>
+                </AnimatedSection>
 
-                <CategoriesGrid />
-                <FeaturedWriters />
+                <AnimatedSection>
+                    <CategoriesGrid />
+                </AnimatedSection>
+                <AnimatedSection>
+                    <FeaturedWriters />
+                </AnimatedSection>
 
-                <div className="max-w-7xl mx-auto px-4 my-12">
+                <AnimatedSection className="max-w-7xl mx-auto px-4 my-12">
                     <DailyDua />
-                </div>
+                </AnimatedSection>
 
-                <TopWishlistedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
-                <RecentlyViewedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
-                <AllBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+                <AnimatedSection>
+                    <TopWishlistedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+                </AnimatedSection>
+                <AnimatedSection>
+                    <RecentlyViewedBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+                </AnimatedSection>
+                <AnimatedSection>
+                    <AllBooks onCompareToggle={toggleCompare} compareIds={compareIds} />
+                </AnimatedSection>
 
                 {/* SEO Content Section */}
             </div>

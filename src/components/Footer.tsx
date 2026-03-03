@@ -50,7 +50,14 @@ const Footer: React.FC = () => {
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <span>🌐</span>
-                                    <span>salafiyyahlibrary.com</span>
+                                    <a
+                                        href="https://salafiyyah-library-bd.netlify.app"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="hover:text-[#f0c040] transition-colors"
+                                    >
+                                        salafiyyah-library-bd.netlify.app
+                                    </a>
                                 </p>
                             </div>
                             <a

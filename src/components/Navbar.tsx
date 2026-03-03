@@ -8,8 +8,16 @@ export default function Navbar() {
     const [open, setOpen] = useState(false)
     const [extraOpen, setExtraOpen] = useState(false)
     const [showLoginModal, setShowLoginModal] = useState(false)
+    const [scrolled, setScrolled] = useState(false)
     const { user } = useAuth()
     const navigate = useNavigate()
+
+    // Handle scroll for blur effect
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 50)
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
 
     // Auto-close menus after 5 seconds of inactivity
     useEffect(() => {
@@ -56,13 +64,16 @@ export default function Navbar() {
                 position: 'fixed',
                 top: 0, left: 0, right: 0,
                 height: '60px',
-                background: '#0a0f1e',
-                borderBottom: '1px solid #1a3a8f',
+                background: scrolled ? 'rgba(10, 15, 30, 0.8)' : '#0a0f1e',
+                backdropFilter: scrolled ? 'blur(12px)' : 'none',
+                WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
+                borderBottom: scrolled ? '1px solid rgba(26, 58, 143, 0.5)' : '1px solid #1a3a8f',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '0 16px',
-                zIndex: 1000
+                zIndex: 1000,
+                transition: 'all 0.3s ease'
             }}>
                 {/* Logo */}
                 <Link to="/" style={{
