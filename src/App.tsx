@@ -35,7 +35,6 @@ const SearchPage = lazy(() => import('./pages/SearchPage'))
 const AIChatPage = lazy(() => import('./pages/AIChatPage'))
 const ComparePage = lazy(() => import('./pages/ComparePage'))
 const TopBooksPage = lazy(() => import('./pages/TopBooksPage'))
-const EventsPage = lazy(() => import('./pages/EventsPage'))
 const AsmaulHusnaPage = lazy(() => import('./pages/AsmaulHusnaPage'))
 const DuaPage = lazy(() => import('./pages/DuaPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
@@ -96,10 +95,16 @@ function App() {
                       <Route path="/hadith/:bookSlug/:chapterNumber" element={<HadithDetailPage />} />
                       <Route path="/salah" element={<SalahTimesPage />} />
                       <Route path="/search" element={<SearchPage />} />
-                      <Route path="/ai" element={<AIChatPage />} />
+                      <Route
+                        path="/ai"
+                        element={
+                          <ProtectedRoute>
+                            <AIChatPage />
+                          </ProtectedRoute>
+                        }
+                      />
                       <Route path="/compare" element={<ComparePage />} />
                       <Route path="/top-books" element={<TopBooksPage />} />
-                      <Route path="/events" element={<EventsPage />} />
                       <Route path="/asmaul-husna" element={<AsmaulHusnaPage />} />
                       <Route path="/dua" element={<DuaPage />} />
                       <Route path="/about" element={<AboutPage />} />

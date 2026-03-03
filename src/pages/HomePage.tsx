@@ -561,48 +561,6 @@ const FeaturedWriters: React.FC = () => {
     )
 }
 
-/* ========== 8. Islamic Event Countdown ========== */
-const IslamicEventCountdown: React.FC = () => {
-    const islamicEvents = [
-        { name: 'রমাদান', date: new Date('2026-02-18') },
-        { name: 'ঈদুল ফিতর', date: new Date('2026-03-20') },
-        { name: 'ঈদুল আযহা', date: new Date('2026-05-27') },
-        { name: 'আশুরা', date: new Date('2026-07-06') },
-        { name: 'মিলাদুন্নবী', date: new Date('2026-09-04') },
-    ]
-
-    const [timeLeft, setTimeLeft] = useState('')
-
-    const nextEvent = useMemo(() => {
-        const now = new Date()
-        return islamicEvents.find(e => e.date > now) || islamicEvents[0]
-    }, [])
-
-    useEffect(() => {
-        const update = () => {
-            const diff = nextEvent.date.getTime() - Date.now()
-            if (diff <= 0) { setTimeLeft('আজ!'); return }
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-            const secs = Math.floor((diff % (1000 * 60)) / 1000)
-            setTimeLeft(`${days} দিন ${hours} ঘণ্টা ${mins} মিনিট ${secs} সেকেন্ড`)
-        }
-        update()
-        const interval = setInterval(update, 1000)
-        return () => clearInterval(interval)
-    }, [nextEvent])
-
-    return (
-        <section className="max-w-7xl mx-auto px-4 my-12" style={{ overflowX: 'hidden' }}>
-            <h2 className="text-xl font-bold text-white mb-4 section-title">🌙 আসন্ন ইসলামী ইভেন্ট</h2>
-            <div className="bg-gradient-to-r from-[#1a3a8f]/30 to-[#0d1428] rounded-xl border border-blue-800/40 p-6 text-center card">
-                <p className="text-[#f0c040] text-2xl font-bold mb-2">{nextEvent.name}</p>
-                <p className="text-white text-lg">{timeLeft}</p>
-            </div>
-        </section>
-    )
-}
 
 /* ========== 9. Daily Dua ========== */
 const DailyDua: React.FC = () => {
@@ -928,8 +886,7 @@ const HomePage: React.FC = () => {
                 <CategoriesGrid />
                 <FeaturedWriters />
 
-                <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 my-12">
-                    <IslamicEventCountdown />
+                <div className="max-w-7xl mx-auto px-4 my-12">
                     <DailyDua />
                 </div>
 

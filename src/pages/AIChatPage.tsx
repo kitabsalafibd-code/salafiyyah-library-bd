@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Helmet } from 'react-helmet-async'
 import ReactMarkdown from 'react-markdown'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
 
 interface Message {
     role: 'user' | 'assistant'
@@ -9,6 +11,7 @@ interface Message {
 }
 
 const EDGE_FUNCTION_URL = 'https://ermxrcaqkblsaespedvs.supabase.co/functions/v1/groq-chat'
+const MESSAGE_LIMIT = 5
 
 const MessageComponent: React.FC<{ msg: Message; isLatest: boolean }> = ({ msg, isLatest }) => {
     const [displayedContent, setDisplayedContent] = useState(isLatest && msg.role === 'assistant' ? '' : msg.content)
@@ -49,17 +52,42 @@ const MessageComponent: React.FC<{ msg: Message; isLatest: boolean }> = ({ msg, 
 }
 
 const AIChatPage: React.FC = () => {
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'instant' })
-    }, [])
-
+    const { user } = useAuth()
     const [messages, setMessages] = useState<Message[]>([
         { role: 'assistant', content: 'আসসালামু আলাইকুম! আমি **কিতাব সহকারী**। বই, কুরআন, হাদীস বা ইসলামী বিষয়ে আমাকে প্রশ্ন করুন। 📖' }
     ])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
+    const [messageCount, setMessageCount] = useState(0)
+    const [limitReachedFlag, setLimitReachedFlag] = useState(false)
     const chatEndRef = useRef<HTMLDivElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+    const fetchUsage = useCallback(async () => {
+        if (!user) return
+        const { data, error } = await supabase
+            .from('ai_usage')
+            .select('message_count')
+            .eq('user_id', user.id)
+            .maybeSingle()
+
+        if (!error && data) {
+            setMessageCount(data.message_count || 0)
+            if (data.message_count >= MESSAGE_LIMIT) {
+                setLimitReachedFlag(true)
+            } else {
+                setLimitReachedFlag(false)
+            }
+        } else {
+            setMessageCount(0)
+            setLimitReachedFlag(false)
+        }
+    }, [user])
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' })
+        fetchUsage()
+    }, [fetchUsage])
 
     useEffect(() => {
         if (messages.length > 1 || loading) {
@@ -68,7 +96,8 @@ const AIChatPage: React.FC = () => {
     }, [messages, loading])
 
     const handleSend = useCallback(async () => {
-        if (!input.trim() || loading) return
+        if (!input.trim() || loading || limitReachedFlag) return
+
         const userMsg: Message = { role: 'user', content: input.trim() }
         setMessages(prev => [...prev, userMsg])
         setInput('')
@@ -78,12 +107,18 @@ const AIChatPage: React.FC = () => {
         const history = [...messages, userMsg].slice(-10).map(m => ({ role: m.role, content: m.content }))
 
         try {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) throw new Error('No session')
+
             const controller = new AbortController()
             const timeout = setTimeout(() => controller.abort(), 30000)
 
             const res = await fetch(EDGE_FUNCTION_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`
+                },
                 body: JSON.stringify({ message: userMsg.content, conversationHistory: history }),
                 signal: controller.signal,
             })
@@ -91,9 +126,19 @@ const AIChatPage: React.FC = () => {
 
             if (!res.ok) throw new Error('API error')
             const data = await res.json()
-            const aiResponse = data.output || data.response || data.message || 'দুঃখিত, উত্তর পাওয়া যায়নি।'
 
+            if (data.limitReached) {
+                setLimitReachedFlag(true)
+                setMessages(prev => [...prev, { role: 'assistant', content: 'দুঃখিত, আপনি আজকের ৫টি প্রশ্নের সীমা শেষ করেছেন।' }])
+                return
+            }
+
+            const aiResponse = data.output || data.response || data.message || 'দুঃখিত, উত্তর পাওয়া যায়নি।'
             setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }])
+
+            // Refresh usage count after message
+            fetchUsage()
+
         } catch (err: any) {
             const errorMsg = err.name === 'AbortError'
                 ? 'সার্ভার সাড়া দিচ্ছে না। একটু পরে চেষ্টা করুন।'
@@ -102,7 +147,7 @@ const AIChatPage: React.FC = () => {
         } finally {
             setLoading(false)
         }
-    }, [input, loading, messages])
+    }, [input, loading, messages, limitReachedFlag, fetchUsage])
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -116,9 +161,15 @@ const AIChatPage: React.FC = () => {
             <Helmet><title>কিতাব সহকারী — Salafiyyah Library BD</title></Helmet>
             <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col container page-content chat-container" style={{ height: 'calc(100vh - 180px)', overflowX: 'hidden' }}>
                 {/* Header */}
-                <div className="mb-4 chat-header">
-                    <h1 className="text-2xl font-bold text-white section-title">🤖 কিতাব সহকারী</h1>
-                    <p className="text-[#8899bb] text-sm">ইসলামী জ্ঞান সম্পর্কে প্রশ্ন করুন</p>
+                <div className="mb-4 chat-header flex justify-between items-start">
+                    <div>
+                        <h1 className="text-2xl font-bold text-white section-title">🤖 কিতাব সহকারী</h1>
+                        <p className="text-[#8899bb] text-sm">ইসলামী জ্ঞান সম্পর্কে প্রশ্ন করুন</p>
+                    </div>
+                    {/* Counter Pill */}
+                    <div className="bg-[#c9a84c]/10 border border-[#c9a84c]/30 px-3 py-1.5 rounded-full text-[#c9a84c] text-xs font-bold">
+                        আজকের প্রশ্ন: {messageCount}/{MESSAGE_LIMIT}
+                    </div>
                 </div>
 
                 {/* Chat messages */}
@@ -154,25 +205,35 @@ const AIChatPage: React.FC = () => {
                     <div ref={chatEndRef} />
                 </div>
 
-                {/* Input */}
-                <div className="flex gap-3 items-end chat-input-area">
-                    <textarea
-                        ref={textareaRef}
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder="আপনার প্রশ্ন লিখুন... (Shift+Enter নতুন লাইন)"
-                        rows={1}
-                        className="flex-1 px-4 py-3 rounded-xl bg-[#0d1428] border border-blue-800/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none resize-none max-h-32 chat-input"
-                        style={{ minHeight: '48px' }}
-                    />
-                    <button
-                        onClick={handleSend}
-                        disabled={loading || !input.trim()}
-                        className="px-5 py-3 bg-gradient-to-r from-[#c9a84c] to-[#f0c040] text-[#0a0f1e] rounded-xl transition-all disabled:opacity-50 font-bold shrink-0 hover:shadow-lg hover:shadow-yellow-900/20"
-                    >
-                        পাঠান
-                    </button>
+                {/* Input Area */}
+                <div className="flex flex-col gap-3 chat-input-area">
+                    {limitReachedFlag && (
+                        <div className="text-center p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                            <p className="text-[#c9a84c] text-sm font-bold">
+                                আপনি আজকের ৫টি প্রশ্নের সীমা শেষ করেছেন। 🌙
+                            </p>
+                        </div>
+                    )}
+                    <div className="flex gap-3 items-end">
+                        <textarea
+                            ref={textareaRef}
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            placeholder={limitReachedFlag ? "সীমা শেষ হয়েছে" : "আপনার প্রশ্ন লিখুন... (Shift+Enter নতুন লাইন)"}
+                            rows={1}
+                            disabled={loading || limitReachedFlag}
+                            className={`flex-1 px-4 py-3 rounded-xl bg-[#0d1428] border border-blue-800/40 text-white placeholder-[#8899bb] focus:border-[#f0c040] focus:outline-none resize-none max-h-32 chat-input ${limitReachedFlag ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
+                            style={{ minHeight: '48px' }}
+                        />
+                        <button
+                            onClick={handleSend}
+                            disabled={loading || !input.trim() || limitReachedFlag}
+                            className="px-5 py-3 bg-gradient-to-r from-[#c9a84c] to-[#f0c040] text-[#0a0f1e] rounded-xl transition-all disabled:opacity-50 font-bold shrink-0 hover:shadow-lg hover:shadow-yellow-900/20"
+                        >
+                            পাঠান
+                        </button>
+                    </div>
                 </div>
             </div>
         </>

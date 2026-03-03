@@ -12,7 +12,11 @@ const Footer: React.FC = () => {
                             <img
                                 src="/logo.png"
                                 alt="Salafiyyah Library BD"
-                                style={{ height: '40px', width: 'auto' }}
+                                style={{
+                                    height: '56px',
+                                    width: 'auto',
+                                    marginRight: '8px'
+                                }}
                                 onError={(e) => { e.currentTarget.style.display = 'none' }}
                             />
                         </Link>
