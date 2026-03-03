@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
@@ -10,6 +10,16 @@ export default function Navbar() {
     const [showLoginModal, setShowLoginModal] = useState(false)
     const { user } = useAuth()
     const navigate = useNavigate()
+
+    // Auto-close menus after 5 seconds of inactivity
+    useEffect(() => {
+        if (!extraOpen && !open) return
+        const timer = setTimeout(() => {
+            setExtraOpen(false)
+            setOpen(false)
+        }, 5000)
+        return () => clearTimeout(timer)
+    }, [extraOpen, open])
 
     const links = [
         { to: '/books', label: '📚 বই' },
